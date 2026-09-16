@@ -16,6 +16,7 @@ import {
 } from '@/components/ui';
 import { artColor, color, layout, screen, space, text } from '@/constants/tokens';
 import { accent, type } from '@/constants/typography';
+import { readAnswer, saveAnswer } from '@/lib/storage/onboarding';
 
 const outcomeCards = require<ImageSourcePropType>('@/assets/illustrations/outcome-cards.jpg');
 
@@ -43,7 +44,12 @@ const options: { label: string; icon: LucideIcon }[] = [
  * note on `options`.
  */
 export default function Q5OutcomeScreen() {
-  const [selected, setSelected] = useState<number | null>(null);
+  const [selected, setSelected] = useState<number | null>(() => readAnswer('goal') ?? null);
+
+  const choose = (index: number) => {
+    setSelected(index);
+    saveAnswer('goal', index);
+  };
 
   useStatusBarStyle('light');
 
@@ -108,7 +114,7 @@ export default function Q5OutcomeScreen() {
               icon={option.icon}
               index={index}
               selected={selected === index}
-              onPress={() => setSelected(index)}
+              onPress={() => choose(index)}
             />
           ))}
         </View>

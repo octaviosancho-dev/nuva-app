@@ -22,6 +22,7 @@ import {
 } from '@/components/ui';
 import { artColor, color, layout, screen, size, space, text } from '@/constants/tokens';
 import { accent, type } from '@/constants/typography';
+import { readAnswer, saveAnswer } from '@/lib/storage/onboarding';
 
 const doctorGap = require<ImageSourcePropType>('@/assets/illustrations/doctor-gap.jpg');
 
@@ -46,7 +47,12 @@ const options: { label: string; icon: LucideIcon }[] = [
  * rather than lifted from a mockup — see the note on `options`.
  */
 export default function Q4DoctorScreen() {
-  const [selected, setSelected] = useState<number | null>(null);
+  const [selected, setSelected] = useState<number | null>(() => readAnswer('doctor') ?? null);
+
+  const choose = (index: number) => {
+    setSelected(index);
+    saveAnswer('doctor', index);
+  };
 
   useStatusBarStyle('light');
 
@@ -114,7 +120,7 @@ export default function Q4DoctorScreen() {
               icon={option.icon}
               index={index}
               selected={selected === index}
-              onPress={() => setSelected(index)}
+              onPress={() => choose(index)}
             />
           ))}
         </View>
