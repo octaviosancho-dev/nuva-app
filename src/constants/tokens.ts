@@ -45,21 +45,21 @@ export const color = {
  */
 export const artColor = {
   /** behind hero-profile.jpg — onboarding welcome */
-  heroPlum: '#582538',
+  heroPlum: '#582437',
   /** behind timeline-branch.jpg — question 1 */
-  headerBrick: '#AF3D22',
+  headerBrick: '#AD3C22',
   /** behind body-signals.jpg — question 2 */
-  headerPlum: '#5F2940',
+  headerPlum: '#5D293F',
   /** behind cycle-moons.jpg — question 3 */
-  headerSage: '#7B9572',
+  headerSage: '#7B9571',
   /** behind doctor-gap.jpg — question 4 */
-  headerBrickQ4: '#AB3D24',
+  headerBrickQ4: '#AA3B24',
   /** behind outcome-cards.jpg — question 5 */
-  headerPlumQ5: '#5D283C',
+  headerPlumQ5: '#59253B',
   /** behind day-arc.jpg — question 6 */
-  headerSageQ6: '#7D9774',
+  headerSageQ6: '#7E9875',
   /** behind bloom-full.jpg — magic moment */
-  magicPlum: '#58273A',
+  magicPlum: '#54273A',
 } as const;
 
 /* --------------------------------------------------------------------- text */
@@ -272,14 +272,113 @@ export const size = {
   optionIconLarge: 44,
   optionMinHeight: 74,
   optionMinHeightWithSubLabel: 84,
+  /** Option card interior, single-line variant. */
+  optionPaddingVertical: 11,
+  optionPaddingHorizontal: 15,
+  optionGap: 13,
+  /** Option card interior when the card carries a sub-label — taller, roomier. */
+  optionPaddingVerticalWithSubLabel: 12,
+  optionPaddingHorizontalWithSubLabel: 16,
+  optionGapWithSubLabel: 14,
   /** Icon square inside a symptom chip. */
   chipIcon: 30,
   chipMinHeight: 52,
+  /** Row and column gap of the 2-column symptom grid. Tightest case at 375px. */
+  chipGridGap: 9,
   /** Selection badge. */
   badge: 26,
+  /** Full-bleed illustration band forming a header's base (Q1, Q4, Q6). */
+  illustrationBand: 100,
   eyebrowHeight: 26,
+  /** The welcome screen's audience badge — a touch larger than an eyebrow pill. */
+  audienceBadgeHeight: 28,
+  audienceBadgePaddingHorizontal: 13,
   progressSegmentHeight: 9,
   progressSegmentGap: 6,
+} as const;
+
+/**
+ * Per-screen measurements from DESIGN_SYSTEM.md §7, taken at 393×852.
+ *
+ * These are one screen's layout, not reusable scale values: a new screen adds
+ * its own group rather than reaching into another's. Anything that turns out to
+ * repeat across screens belongs in `space`, `layout` or `size` instead.
+ */
+export const screen = {
+  /**
+   * y of the eyebrow pill inside a quiz header: top inset, the back-button row,
+   * the gap. A floating illustration aligns its top edge to this, so the art
+   * starts level with "Question n of 6".
+   *
+   * §7's measured values (Q2 110, Q3 108) sit a little above the pill; aligning
+   * to it exactly is the call made here.
+   */
+  quizEyebrowTop: layout.headerTopInset + size.backButton + space['3xl'],
+
+  /**
+   * One fixed height for every quiz header, Q1 through Q6.
+   *
+   * Content-sized headers drift: the block ends up as tall as whatever the
+   * question happens to wrap to, so the coloured container is a different height
+   * on every screen. Pinning it keeps the arch landing in the same place all the
+   * way through the quiz.
+   *
+   * Bounded below by Q1's band variant, whose text runs to 245 before a 100px
+   * illustration band anchored at the base — so the block cannot go under ~345
+   * without the band riding up over the supporting line.
+   *
+   * Bounded above by Q2, the fullest screen: twelve chips in six rows are 357
+   * tall, and at 364 they ended five pixels short of the CTA. 352 leaves that
+   * screen a breathable gap and still clears both floating illustrations by
+   * more than 17px.
+   */
+  quizHeaderHeight: 352,
+
+  /**
+   * Question measure on the band-layout screens — Q1, Q4, Q6. The art sits below
+   * the text rather than beside it, so the line runs wide and uses displayMD.
+   */
+  bandQuestionMaxWidth: 312,
+  welcome: {
+    /** The only fixed-height header in the app; every other one sizes to content. */
+    headerHeight: 452,
+    wordmarkTop: 54,
+    badgeTop: 56,
+    /** Caps the lead paragraph at roughly 36 characters a line. */
+    leadMaxWidth: 292,
+  },
+
+  q2: {
+    /** Both measures clear the floating illustration by ≥4px — see §6. */
+    questionMaxWidth: 198,
+    supportMaxWidth: 200,
+    artSize: 162,
+    artRight: 2,
+    /** §6's minimum gap between question text and a floating illustration. */
+    artClearance: 4,
+  },
+  q3: {
+    questionMaxWidth: 194,
+    supportMaxWidth: 194,
+    artSize: 168,
+    artRight: 0,
+    artClearance: 4,
+  },
+  magicMoment: {
+    /**
+     * bloom-full.jpg is 1179×1579. The art bleeds to both edges and is anchored
+     * to the screen's lower half, so its height follows from the screen width.
+     */
+    artAspectRatio: 1179 / 1579,
+  },
+  q5: {
+    /** Same floating-square geometry as Q2 — §6 lists 198 as a measure that works. */
+    questionMaxWidth: 198,
+    supportMaxWidth: 200,
+    artSize: 162,
+    artRight: 2,
+    artClearance: 4,
+  },
 } as const;
 
 /**
