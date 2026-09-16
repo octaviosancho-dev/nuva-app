@@ -192,13 +192,40 @@ const hardShadow = (offset: number, shadowColor: string): ViewStyle =>
     default: {},
   })!;
 
+/**
+ * Throw distance of each hard shadow, in dp. Shared by the iOS shadow props
+ * above and by the fallback layer everywhere else, so the two can never drift.
+ */
+export const shadowOffset = {
+  card: 5,
+  chip: 3,
+  cta: 5,
+} as const;
+
+/** Colour of each hard shadow, paired with `shadowOffset`. */
+export const shadowColor = {
+  card: color.ink,
+  chip: color.ink,
+  cta: color.brick,
+} as const;
+
+/**
+ * Whether the platform draws `shadow.*` itself.
+ *
+ * Only iOS does. Everywhere else `shadow.*` resolves to an empty object and the
+ * offset has to be drawn by hand — see `HardShadowLayer`. Without it the
+ * selected card, the selected chip and the primary button all lose the hard
+ * offset, which is the most distinctive thing in the whole direction.
+ */
+export const hasNativeShadow = Platform.OS === 'ios';
+
 export const shadow = {
   /** Selected option card. */
-  card: hardShadow(5, color.ink),
+  card: hardShadow(shadowOffset.card, shadowColor.card),
   /** Selected symptom chip — smaller element, shorter throw. */
-  chip: hardShadow(3, color.ink),
+  chip: hardShadow(shadowOffset.chip, shadowColor.chip),
   /** Enabled primary button. Brick, not ink, so the button reads as brand. */
-  cta: hardShadow(5, color.brick),
+  cta: hardShadow(shadowOffset.cta, shadowColor.cta),
   /** Disabled primary button carries no shadow at all. */
   none: {} as ViewStyle,
 } as const;

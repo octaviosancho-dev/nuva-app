@@ -11,6 +11,7 @@ export {
 export { SymptomChip, type SymptomChipProps } from './SymptomChip';
 export { TextLink, type TextLinkProps } from './TextLink';
 export { GrainOverlay, HalftoneOverlay, type HalftoneVariant } from './Texture';
+export { HardShadowLayer, type HardShadowLayerProps } from './HardShadowLayer';
 export { useEntrance } from './useEntrance';
 export { usePressFeedback } from './usePressFeedback';
 export { useStatusBarStyle } from './useStatusBarStyle';

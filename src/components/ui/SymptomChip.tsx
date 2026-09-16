@@ -16,10 +16,13 @@ import {
   motion,
   radius,
   shadow,
+  shadowColor,
+  shadowOffset,
   size,
   space,
 } from '@/constants/tokens';
 import { type } from '@/constants/typography';
+import { HardShadowLayer } from './HardShadowLayer';
 import { usePressFeedback } from './usePressFeedback';
 
 export interface SymptomChipProps {
@@ -60,6 +63,9 @@ export function SymptomChip({
     shadowOpacity: selection.value,
   }));
 
+  // Mirrors shadowOpacity for the platforms that cannot draw it themselves.
+  const shadowLayerStyle = useAnimatedStyle(() => ({ opacity: selection.value }));
+
   const squareStyle = useAnimatedStyle(() => ({
     backgroundColor: interpolateColor(selection.value, [0, 1], [tone, color.cream]),
   }));
@@ -72,8 +78,14 @@ export function SymptomChip({
       accessibilityRole="checkbox"
       accessibilityState={{ checked: selected }}
       accessibilityLabel={label}
-      style={style}
+      style={[styles.wrap, style]}
     >
+      <HardShadowLayer
+        offset={shadowOffset.chip}
+        color={shadowColor.chip}
+        borderRadius={radius.md}
+        style={shadowLayerStyle}
+      />
       {/* `shadow.chip` first — see OptionCard; it carries shadowOpacity 1 and
           `styles.chip` zeroes it. */}
       <Animated.View style={[shadow.chip, styles.chip, chipStyle, feedback.style]}>
@@ -89,6 +101,10 @@ export function SymptomChip({
 }
 
 const styles = StyleSheet.create({
+  /** Anchors the fallback shadow layer; the chip decides the size. */
+  wrap: {
+    position: 'relative',
+  },
   chip: {
     flexDirection: 'row',
     alignItems: 'center',

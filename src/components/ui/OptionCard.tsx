@@ -18,10 +18,13 @@ import {
   optionFills,
   radius,
   shadow,
+  shadowColor,
+  shadowOffset,
   size,
   space,
 } from '@/constants/tokens';
 import { type } from '@/constants/typography';
+import { HardShadowLayer } from './HardShadowLayer';
 import { usePressFeedback } from './usePressFeedback';
 
 export interface OptionCardProps {
@@ -76,6 +79,9 @@ export function OptionCard({
     shadowOpacity: selection.value,
   }));
 
+  // The fallback layer fades with selection exactly as shadowOpacity does on iOS.
+  const shadowLayerStyle = useAnimatedStyle(() => ({ opacity: selection.value }));
+
   const badgeStyle = useAnimatedStyle(() => {
     if (reducedMotion) {
       return { opacity: selection.value };
@@ -94,8 +100,14 @@ export function OptionCard({
       accessibilityRole="radio"
       accessibilityState={{ selected }}
       accessibilityLabel={subLabel == null ? label : `${label}. ${subLabel}`}
-      style={style}
+      style={[styles.wrap, style]}
     >
+      <HardShadowLayer
+        offset={shadowOffset.card}
+        color={shadowColor.card}
+        borderRadius={radius.xl}
+        style={shadowLayerStyle}
+      />
       <Animated.View
         style={[
           // `shadow.card` must come first: it carries shadowOpacity 1, and
@@ -140,6 +152,10 @@ export function OptionCard({
 }
 
 const styles = StyleSheet.create({
+  /** Anchors the fallback shadow layer; the card decides the size. */
+  wrap: {
+    position: 'relative',
+  },
   card: {
     flexDirection: 'row',
     alignItems: 'center',
