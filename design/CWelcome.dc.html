@@ -1,0 +1,66 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&amp;family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&amp;display=swap">
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: 'DM Sans', 'Segoe UI', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+    a { color: #B5462A; text-decoration: none; }
+    a:hover { color: #8E3320; }
+    .grain::after { content: ""; position: absolute; inset: 0; pointer-events: none; opacity: 0.06; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E"); }
+    .halftone { background-image: radial-gradient(#FFF4E6 1.6px, transparent 1.6px); background-size: 12px 12px; opacity: 0.14; }
+  </style>
+</helmet>
+
+<div class="grain" style="position: relative; width: 393px; height: 852px; background: #FFF4E6; display: flex; flex-direction: column; overflow: hidden;">
+
+  <div style="position: relative; height: 452px; flex: none; background: #582538; border-radius: 0 0 50% 50% / 0 0 15% 15%; overflow: hidden;">
+    <div class="halftone" style="position: absolute; inset: 0;"></div>
+
+    <img src="hero-profile.jpg" alt="Woman in profile with leaves growing from her hair" style="position: absolute; left: 0; bottom: 0; width: 100%; height: auto; display: block;">
+
+    <div style="position: absolute; top: 54px; left: 26px; font-family: 'Bricolage Grotesque', 'Arial Black', sans-serif; font-weight: 800; font-size: 25px; letter-spacing: -0.03em; color: #FFF4E6;">nuva</div>
+    <div style="position: absolute; top: 56px; right: 26px; display: inline-flex; align-items: center; height: 28px; padding: 0 13px; border-radius: 100px; background: #E3A32F;">
+      <span style="font-size: 10.5px; font-weight: 600; letter-spacing: 0.06em; color: #241A16;">35–45 · perimenopause</span>
+    </div>
+  </div>
+
+  <div style="padding: 34px 26px 0;">
+    <h1 style="margin: 0; font-family: 'Bricolage Grotesque', 'Arial Black', sans-serif; font-weight: 800; font-size: 43px; line-height: 0.96; letter-spacing: -0.035em; color: #241A16;">Your body is<br><span style="color: #B5462A;">changing.</span></h1>
+    <div style="height: 14px;"></div>
+    <p style="margin: 0; font-size: 15.5px; line-height: 1.55; color: #5C4A42; max-width: 292px; text-wrap: pretty;">Anxiety, brain fog, broken sleep. For the first time, you'll understand why.</p>
+  </div>
+
+  <div style="flex: 1; min-height: 18px;"></div>
+
+  <div style="padding: 0 26px; display: flex; flex-direction: column; align-items: center;">
+    <div style="width: 100%; height: 64px; border-radius: 20px; background: #241A16; box-shadow: 5px 5px 0 #B5462A; display: flex; align-items: center; justify-content: space-between; padding: 8px 8px 8px 26px; cursor: pointer;">
+      <span style="font-family: 'Bricolage Grotesque', 'Arial Black', sans-serif; font-weight: 600; font-size: 18px; letter-spacing: -0.02em; color: #FFF4E6;">Let's begin</span>
+      <div style="width: 48px; height: 48px; border-radius: 14px; background: #E3A32F; display: flex; align-items: center; justify-content: center;">
+        <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#241A16" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M5 12h14"></path><path d="m13 6 6 6-6 6"></path>
+        </svg>
+      </div>
+    </div>
+
+    <div style="height: 18px;"></div>
+
+    <div style="font-size: 13.5px; font-weight: 600; color: #8A6E5E; cursor: pointer;">I already have an account</div>
+  </div>
+
+  <div style="height: 30px;"></div>
+
+</div>
+</x-dc>
+
+<script data-dc-script data-props='{"$preview":{"width":393,"height":852}}'>
+class Component extends DCLogic {}
+</script>
+</body>
+</html>
