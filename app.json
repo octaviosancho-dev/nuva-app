@@ -8,9 +8,12 @@
     "scheme": "nuva",
     "userInterfaceStyle": "automatic",
     "ios": {
-      "icon": "./assets/expo.icon"
+      "icon": "./assets/expo.icon",
+      "bundleIdentifier": "com.octaviosancho.nuva",
+      "supportsTablet": false
     },
     "android": {
+      "package": "com.octaviosancho.nuva",
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
