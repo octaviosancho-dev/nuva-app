@@ -1,0 +1,181 @@
+/* Nuva design system — shared preview styles.
+ *
+ * Loaded after tokens.css, so every value below is a token reference. Nothing
+ * here hard-codes a colour, a radius or a shadow. The previews add layout only.
+ */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+.nv-screen {
+  background: var(--canvas);
+  color: var(--text-primary);
+  font-family: var(--font-text);
+  -webkit-font-smoothing: antialiased;
+  padding: var(--space-6);
+}
+
+.nv-note {
+  font-family: var(--font-text);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.9px;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+
+/* ------------------------------------------------------------------ eyebrow */
+.nv-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  height: 26px;
+  padding: 0 12px;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-text);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.9px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.nv-eyebrow--on-night { background: rgba(253, 248, 241, 0.14); color: var(--text-on-night); }
+.nv-eyebrow--on-light { background: var(--surface-sunken); color: var(--text-secondary); }
+.nv-eyebrow--ember    { background: var(--ember); color: var(--on-ember); }
+
+/* ------------------------------------------------------------------ buttons */
+.nv-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  width: 100%;
+  min-height: 56px;
+  padding: 0 var(--space-6);
+  border: none;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-text);
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: -0.1px;
+  cursor: pointer;
+  transition: transform 160ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.nv-btn:active { transform: scale(0.98); }
+
+.nv-btn--primary   { background: var(--ember); color: var(--on-ember); box-shadow: var(--shadow-ember); }
+.nv-btn--secondary { background: var(--sand);  color: var(--on-sand); }
+.nv-btn--ghost     { background: transparent;  color: var(--text-link); box-shadow: none; }
+.nv-btn--on-night  { background: var(--text-on-night); color: var(--night); box-shadow: none; }
+.nv-btn--disabled  { background: var(--ember); color: var(--on-ember); opacity: var(--opacity-disabled); box-shadow: none; cursor: not-allowed; }
+.nv-btn--compact   { min-height: 42px; font-size: 14px; padding: 0 var(--space-5); width: auto; }
+
+/* -------------------------------------------------------------------- cards */
+.nv-card {
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  padding: var(--space-5);
+}
+.nv-card--flat { box-shadow: none; border: 1px solid var(--line); }
+
+/* -------------------------------------------------------------- option card */
+.nv-option {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  width: 100%;
+  min-height: 72px;
+  padding: var(--space-4) var(--space-5);
+  border: 2px solid transparent;
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  box-shadow: var(--shadow-xs);
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 160ms, box-shadow 160ms, transform 160ms;
+}
+.nv-option:active { transform: scale(0.99); }
+.nv-option--selected {
+  border-color: var(--text-primary);
+  box-shadow: var(--shadow-md);
+}
+.nv-option__icon {
+  flex: 0 0 auto;
+  width: 44px; height: 44px;
+  border-radius: var(--radius-pill);
+  display: grid;
+  place-items: center;
+}
+.nv-option__body { flex: 1 1 auto; min-width: 0; }
+.nv-option__title { display: block; font-size: 15px; font-weight: 500; line-height: 20px; color: var(--text-primary); }
+.nv-option__sub   { display: block; font-size: 13.5px; line-height: 20px; color: var(--text-secondary); margin-top: 2px; }
+.nv-option__check {
+  flex: 0 0 auto;
+  width: 26px; height: 26px;      /* reserved even when unselected: no reflow */
+  border-radius: var(--radius-pill);
+  display: grid;
+  place-items: center;
+}
+.nv-option--selected .nv-option__check { background: var(--text-primary); }
+
+/* --------------------------------------------------------------------- chip */
+.nv-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 46px;
+  padding: var(--space-2) var(--space-4) var(--space-2) var(--space-2);
+  border: 1.5px solid var(--line-strong);
+  border-radius: var(--radius-pill);
+  background: var(--surface);
+  color: var(--text-primary);
+  font-family: var(--font-text);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 160ms, border-color 160ms, transform 160ms;
+}
+.nv-chip:active { transform: scale(0.97); }
+.nv-chip__dot {
+  width: 30px; height: 30px;
+  border-radius: var(--radius-pill);
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+}
+.nv-chip--selected { border-color: transparent; box-shadow: var(--shadow-sm); }
+
+/* ----------------------------------------------------------------- severity */
+.nv-sev { display: flex; gap: var(--space-2); }
+.nv-sev__step {
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-1);
+  border: 1.5px solid transparent;
+  border-radius: var(--radius-md);
+  background: var(--surface-sunken);
+  cursor: pointer;
+  transition: border-color 160ms, background 160ms;
+}
+.nv-sev__swatch { width: 100%; height: 26px; border-radius: var(--radius-xs); }
+.nv-sev__label  { font-size: 12px; line-height: 16px; color: var(--text-secondary); }
+.nv-sev__step--selected { border-color: var(--text-primary); background: var(--surface); }
+.nv-sev__step--selected .nv-sev__label { color: var(--text-primary); font-weight: 500; }
+
+/* --------------------------------------------------------------- text link */
+.nv-link {
+  color: var(--text-link);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  font-weight: 500;
+  cursor: pointer;
+}
+.nv-link:active { opacity: var(--opacity-pressed); }
+
+/* ------------------------------------------------------------------ helpers */
+.nv-stack  { display: flex; flex-direction: column; }
+.nv-row    { display: flex; align-items: center; }
+.nv-grow   { flex: 1 1 auto; min-width: 0; }
+.nv-tabular { font-variant-numeric: tabular-nums; }

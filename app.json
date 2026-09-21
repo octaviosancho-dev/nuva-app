@@ -15,7 +15,7 @@
     "android": {
       "package": "com.octaviosancho.nuva",
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
+        "backgroundColor": "#17132A",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
         "backgroundImage": "./assets/images/android-icon-background.png",
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
@@ -31,7 +31,7 @@
       [
         "expo-splash-screen",
         {
-          "backgroundColor": "#FFF4E6",
+          "backgroundColor": "#17132A",
           "image": "./assets/images/splash-icon.png",
           "imageWidth": 76
         }

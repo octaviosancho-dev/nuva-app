@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Flow — onboarding</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500..600;1,9..144,500..600&amp;family=DM+Sans:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+
+:root{
+--canvas:#faf5ee;--surface:#fffcf7;--surface-sunken:#f1e9dd;--surface-raised:#ffffff;
+--night:#2a2342;--night-deep:#17132a;--scrim:rgba(31,27,46,0.55);
+--text-primary:#1f1b2e;--text-secondary:#57506b;--text-tertiary:#6e6684;--text-link:#b0442b;
+--text-on-night:#fdf8f1;--text-on-night-muted:#beb5cc;
+--ember:#e39a2e;--ember-deep:#8a5a12;--ember-soft:#f8e4be;
+--clay:#b0442b;--clay-soft:#f3d9ce;--luna:#86ae7e;--luna-deep:#4f7549;--luna-soft:#c7dcc2;
+--blush:#de9a8b;--sand:#ebd9be;--iris:#6360a6;--tide:#35706f;--plum:#8a4468;
+--on-ember:#1f1b2e;--on-clay:#fdf8f1;--on-luna:#1f1b2e;--on-luna-soft:#1f1b2e;--on-blush:#1f1b2e;
+--on-sand:#1f1b2e;--on-iris:#fdf8f1;--on-tide:#fdf8f1;--on-plum:#fdf8f1;
+--severity-1:#cadcc4;--severity-2:#ebd2a0;--severity-3:#e39a2e;--severity-4:#b0442b;
+--line:#e6daca;--line-strong:#9c8b72;--line-on-night:rgba(253,248,241,0.2);--focus-ring:#1f1b2e;
+--space-1:4px;--space-2:8px;--space-3:12px;--space-4:16px;--space-5:20px;--space-6:24px;
+--space-7:28px;--space-8:32px;--space-10:40px;--space-12:48px;--space-16:64px;--space-20:80px;
+--radius-xs:8px;--radius-sm:12px;--radius-md:16px;--radius-lg:22px;--radius-xl:28px;
+--radius-2xl:36px;--radius-pill:999px;
+--shadow-xs:0 1px 2px rgba(31,27,46,0.06);--shadow-sm:0 2px 8px rgba(31,27,46,0.08);
+--shadow-md:0 6px 18px rgba(31,27,46,0.1);--shadow-lg:0 16px 36px rgba(31,27,46,0.14);
+--shadow-ember:0 8px 20px rgba(227,154,46,0.34);
+--opacity-disabled:0.4;--opacity-pressed:0.72;--opacity-grain:0.05;
+--font-display:Fraunces,Georgia,serif;--font-text:"DM Sans",system-ui,sans-serif;
+--e-standard:cubic-bezier(0.2,0.8,0.2,1);--e-enter:cubic-bezier(0,0,0.2,1);
+--e-exit:cubic-bezier(0.4,0,1,1);--e-breathe:cubic-bezier(0.45,0,0.55,1);
+}
+
+*,*::before,*::after{box-sizing:border-box;}
+body{margin:0;background:var(--canvas);color:var(--text-primary);font-family:var(--font-text);-webkit-font-smoothing:antialiased;}
+button{font-family:inherit;border:none;background:none;padding:0;cursor:pointer;color:inherit;}
+a{color:var(--text-link);}
+.nv-eyebrow{display:inline-flex;align-items:center;height:26px;padding:0 12px;border-radius:var(--radius-pill);font-family:var(--font-text);font-size:11px;font-weight:500;letter-spacing:0.9px;text-transform:uppercase;white-space:nowrap;}
+.nv-eyebrow--on-night{background:rgba(253,248,241,0.14);color:var(--text-on-night);}
+.nv-eyebrow--on-light{background:var(--surface-sunken);color:var(--text-secondary);}
+.nv-eyebrow--ember{background:var(--ember);color:var(--on-ember);}
+.nv-btn{display:inline-flex;align-items:center;justify-content:center;gap:var(--space-2);width:100%;min-height:56px;padding:0 var(--space-6);border:none;border-radius:var(--radius-pill);font-family:var(--font-text);font-size:16px;font-weight:500;letter-spacing:-0.1px;cursor:pointer;text-decoration:none;transition:transform 160ms var(--e-standard),opacity 240ms var(--e-standard);}
+.nv-btn:active{transform:scale(0.98);}
+.nv-btn--primary{background:var(--ember);color:var(--on-ember);box-shadow:var(--shadow-ember);}
+.nv-btn--secondary{background:var(--sand);color:var(--on-sand);}
+.nv-btn--ghost{background:transparent;color:var(--text-link);box-shadow:none;}
+.nv-btn--on-night{background:var(--text-on-night);color:var(--night);box-shadow:none;}
+.nv-btn--disabled{background:var(--ember);color:var(--on-ember);opacity:var(--opacity-disabled);box-shadow:none;cursor:not-allowed;}
+.nv-btn--compact{min-height:42px;font-size:14px;padding:0 var(--space-5);width:auto;}
+.nv-card{background:var(--surface);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);padding:var(--space-5);}
+.nv-card--flat{box-shadow:none;border:1px solid var(--line);}
+.nv-option{display:flex;align-items:center;gap:var(--space-4);width:100%;min-height:72px;padding:var(--space-4) var(--space-5);border:2px solid transparent;border-radius:var(--radius-lg);background:var(--surface);box-shadow:var(--shadow-xs);text-align:left;cursor:pointer;transition:border-color 160ms,box-shadow 160ms,transform 160ms;}
+.nv-option:active{transform:scale(0.99);}
+.nv-option--selected{border-color:var(--text-primary);box-shadow:var(--shadow-md);}
+.nv-option__icon{flex:0 0 auto;width:44px;height:44px;border-radius:var(--radius-pill);display:grid;place-items:center;}
+.nv-option__body{flex:1 1 auto;min-width:0;}
+.nv-option__title{display:block;font-size:15px;font-weight:500;line-height:20px;color:var(--text-primary);}
+.nv-option__sub{display:block;font-size:13.5px;line-height:20px;color:var(--text-secondary);margin-top:2px;}
+.nv-option__check{flex:0 0 auto;width:26px;height:26px;border-radius:var(--radius-pill);display:grid;place-items:center;}
+.nv-option--selected .nv-option__check{background:var(--text-primary);}
+.nv-option__check svg{opacity:0;transition:opacity 160ms;}
+.nv-option--selected .nv-option__check svg{opacity:1;}
+.nv-chip{display:inline-flex;align-items:center;gap:var(--space-2);min-height:46px;padding:var(--space-2) var(--space-4) var(--space-2) var(--space-2);border:1.5px solid var(--line-strong);border-radius:var(--radius-pill);background:var(--surface);color:var(--text-primary);font-family:var(--font-text);font-size:13px;font-weight:500;cursor:pointer;transition:background 160ms,border-color 160ms,transform 160ms,color 160ms;}
+.nv-chip:active{transform:scale(0.97);}
+.nv-chip__dot{width:30px;height:30px;border-radius:var(--radius-pill);display:grid;place-items:center;flex:0 0 auto;transition:background 160ms;}
+.nv-chip--selected{border-color:transparent;box-shadow:var(--shadow-sm);}
+.nv-sev{display:flex;gap:var(--space-2);}
+.nv-sev__step{flex:1 1 0;display:flex;flex-direction:column;align-items:center;gap:var(--space-2);padding:var(--space-3) var(--space-1);border:1.5px solid transparent;border-radius:var(--radius-md);background:var(--surface-sunken);cursor:pointer;transition:border-color 160ms,background 160ms,opacity 160ms;}
+.nv-sev__swatch{width:100%;height:26px;border-radius:var(--radius-xs);}
+.nv-sev__label{font-size:12px;line-height:16px;color:var(--text-secondary);}
+.nv-sev__step--selected{border-color:var(--text-primary);background:var(--surface);}
+.nv-sev__step--selected .nv-sev__label{color:var(--text-primary);font-weight:500;}
+.nv-link{color:var(--text-link);text-decoration:underline;text-underline-offset:2px;font-weight:500;cursor:pointer;}
+.nv-link:active{opacity:var(--opacity-pressed);}
+.nv-link--on-night{color:var(--ember);}
+.nv-tabular{font-variant-numeric:tabular-nums;}
+
+@keyframes nv-rise{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:none;}}
+@keyframes nv-rise20{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:none;}}
+@keyframes nv-line{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:none;}}
+@keyframes nv-fade{from{opacity:0;}to{opacity:1;}}
+@keyframes nv-pop{0%{opacity:0;transform:scale(0.9);}100%{opacity:1;transform:scale(1);}}
+@keyframes nv-breathe{0%,100%{transform:translateY(0) scaleY(1);}50%{transform:translateY(-1.5px) scaleY(1.015);}}
+@keyframes nv-bloom{0%{opacity:0;transform:scale(0.7);}55%{opacity:0.13;transform:scale(1.04);}100%{opacity:0.08;transform:scale(1);}}
+@keyframes nv-wings{0%{opacity:0;transform:scaleX(0.15);}62%{opacity:1;transform:scaleX(1.06);}100%{opacity:1;transform:scaleX(1);}}
+@keyframes nv-draw{from{stroke-dashoffset:60;}to{stroke-dashoffset:0;}}
+@keyframes nv-seg{from{transform:scaleX(0);}to{transform:scaleX(1);}}
+@keyframes nv-pulse{0%,100%{transform:scaleX(1);}50%{transform:scaleX(1.06);}}
+@keyframes nv-motes{0%{opacity:0.9;transform:translateY(0);}100%{opacity:0;transform:translateY(-6px);}}
+@keyframes nv-spark{0%{opacity:0;transform:scale(0);}45%{opacity:1;transform:scale(1);}100%{opacity:0;transform:scale(0.4);}}
+@keyframes nv-drawline{from{stroke-dashoffset:900;}to{stroke-dashoffset:0;}}
+.a-rise{animation:nv-rise 240ms var(--e-enter) both;}
+.a-rise20{animation:nv-rise20 560ms var(--e-enter) both;}
+.a-fade{animation:nv-fade 380ms var(--e-enter) both;}
+.a-line{animation:nv-line 240ms var(--e-enter) both;}
+.a-pop{animation:nv-pop 160ms var(--e-standard) both;}
+.a-breathe{animation:nv-breathe 3200ms var(--e-breathe) infinite;transform-origin:50% 100%;}
+.d1{animation-delay:44ms;}.d2{animation-delay:88ms;}.d3{animation-delay:132ms;}.d4{animation-delay:176ms;}
+.d5{animation-delay:220ms;}.d6{animation-delay:264ms;}.d7{animation-delay:308ms;}.d8{animation-delay:352ms;}
+@media (prefers-reduced-motion: reduce){
+.a-rise,.a-rise20,.a-line,.a-pop,.a-fade{animation:nv-fade 160ms both;}
+.a-breathe{animation:none;}
+}
+
+.nv-grain{position:absolute;inset:0;background-image:url(/_blob/88ac88ddea6e97317a3577b9c2b9e59f);background-size:100px 100px;opacity:0.05;pointer-events:none;z-index:8;}
+.nv-screen-frame{position:relative;overflow:hidden;font-family:var(--font-text);color:var(--text-primary);}
+@keyframes nv-inx0{from{opacity:0;transform:translateX(24px);}to{opacity:1;transform:none;}}
+@keyframes nv-fx0{from{opacity:0;}to{opacity:1;}}
+.p0{animation:nv-inx0 240ms var(--e-enter) 80ms both;}
+.h0{animation:nv-fx0 240ms var(--e-standard) both;}
+@keyframes nv-inx1{from{opacity:0;transform:translateX(24px);}to{opacity:1;transform:none;}}
+@keyframes nv-fx1{from{opacity:0;}to{opacity:1;}}
+.p1{animation:nv-inx1 240ms var(--e-enter) 80ms both;}
+.h1{animation:nv-fx1 240ms var(--e-standard) both;}
+@keyframes nv-inx2{from{opacity:0;transform:translateX(24px);}to{opacity:1;transform:none;}}
+@keyframes nv-fx2{from{opacity:0;}to{opacity:1;}}
+.p2{animation:nv-inx2 240ms var(--e-enter) 80ms both;}
+.h2{animation:nv-fx2 240ms var(--e-standard) both;}
+@keyframes nv-inx3{from{opacity:0;transform:translateX(24px);}to{opacity:1;transform:none;}}
+@keyframes nv-fx3{from{opacity:0;}to{opacity:1;}}
+.p3{animation:nv-inx3 240ms var(--e-enter) 80ms both;}
+.h3{animation:nv-fx3 240ms var(--e-standard) both;}
+@keyframes nv-inx4{from{opacity:0;transform:translateX(24px);}to{opacity:1;transform:none;}}
+@keyframes nv-fx4{from{opacity:0;}to{opacity:1;}}
+.p4{animation:nv-inx4 240ms var(--e-enter) 80ms both;}
+.h4{animation:nv-fx4 240ms var(--e-standard) both;}
+@keyframes nv-inx5{from{opacity:0;transform:translateX(24px);}to{opacity:1;transform:none;}}
+@keyframes nv-fx5{from{opacity:0;}to{opacity:1;}}
+.p5{animation:nv-inx5 240ms var(--e-enter) 80ms both;}
+.h5{animation:nv-fx5 240ms var(--e-standard) both;}
+@keyframes nv-inx6{from{opacity:0;transform:translateX(24px);}to{opacity:1;transform:none;}}
+@keyframes nv-fx6{from{opacity:0;}to{opacity:1;}}
+.p6{animation:nv-inx6 240ms var(--e-enter) 80ms both;}
+.h6{animation:nv-fx6 240ms var(--e-standard) both;}
+@keyframes nv-inx7{from{opacity:0;transform:translateX(24px);}to{opacity:1;transform:none;}}
+@keyframes nv-fx7{from{opacity:0;}to{opacity:1;}}
+.p7{animation:nv-inx7 240ms var(--e-enter) 80ms both;}
+.h7{animation:nv-fx7 240ms var(--e-standard) both;}
+.crestfill{transition:fill 240ms var(--e-standard);}
+.seg{transition:background 240ms var(--e-standard);}
+@media (prefers-reduced-motion: reduce){
+.p0{animation:nv-fx0 160ms both;}.p1{animation:nv-fx1 160ms both;}.p2{animation:nv-fx2 160ms both;}.p3{animation:nv-fx3 160ms both;}.p4{animation:nv-fx4 160ms both;}.p5{animation:nv-fx5 160ms both;}.p6{animation:nv-fx6 160ms both;}.p7{animation:nv-fx7 160ms both;}}
+
+.l1{animation:nv-line 240ms var(--e-enter) 200ms both;}
+.l2{animation:nv-line 240ms var(--e-enter) 340ms both;}
+.l3{animation:nv-line 240ms var(--e-enter) 480ms both;}
+.mm-body{animation:nv-fade 380ms var(--e-enter) 760ms both;}
+.mm-cta{animation:nv-fade 380ms var(--e-enter) 1100ms both;}
+.mm-glow{animation:nv-bloom 1600ms var(--e-breathe) 900ms both;}
+
+</style>
+</helmet>
+<div class="nv-screen-frame" style="width: 393px; height: 852px; background: var(--canvas);">
+  <div style="position:absolute;top:0;left:0;width:393px;height:269px;">
+    <svg width="393" height="269" viewBox="0 0 393 269" style="position:absolute;top:0;left:0;" aria-hidden="true"><path class="crestfill" d="M 0 0 H 393 V 246 Q 196.5 290 0 246 Z" fill="{{fill}}"></path></svg>
+    <div style="position:absolute;inset:0;padding:58px 24px 0;display:flex;flex-direction:column;{{headerVis}}">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+        <button type="button" onClick="{{back}}" aria-label="Go back" style="width:36px;height:36px;flex:0 0 auto;border-radius:999px;background:{{backBg}};display:grid;place-items:center;{{backVis}}"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="{{fg}}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"></path></svg></button>
+        <span style="position:relative;flex:1 1 auto;"><span style="display:flex;gap:5px;"><sc-for list="{{segs}}" as="seg" hint-placeholder-count="6"><span class="seg" style="flex:1;height:3px;border-radius:999px;background:{{seg.bg}};"></span></sc-for></span><span style="position:absolute;top:-11px;left:{{mothLeft}};width:16px;line-height:0;{{mothVis}}">{{moth}}</span></span>
+        <span class="nv-tabular" style="font-family:var(--font-text);font-size:12px;line-height:17px;font-weight:400;color:var(--text-on-night-muted);">{{count}}</span>
+      </div>
+      <span class="nv-eyebrow h{{k}}" style="background:{{pillBg}};color:{{fg}};">{{eyebrow}}</span>
+      <h1 class="h{{k}}" style="margin:12px 0 0;font-family:var(--font-display);font-size:32px;line-height:35px;font-weight:600;letter-spacing:-0.7px;color:{{fg}};">{{title}}</h1>
+    </div>
+  </div>
+  <div class="p{{k}}" style="position:absolute;top:268px;left:0;width:393px;height:584px;padding:28px 24px 24px;display:flex;flex-direction:column;">
+    <sc-if value="{{isQ}}" hint-placeholder-val="{{yes}}">
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <sc-for list="{{options}}" as="opt" hint-placeholder-count="4">
+          <button type="button" onClick="{{opt.pick}}" class="nv-option {{opt.cls}}"><span class="nv-option__icon" style="background:{{opt.disc}};"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--text-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="{{opt.d1}}"></path><path d="{{opt.d2}}"></path></svg></span><span class="nv-option__body"><span class="nv-option__title">{{opt.label}}</span></span><span class="nv-option__check"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--surface)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg></span></button>
+        </sc-for>
+      </div>
+    </sc-if>
+    <sc-if value="{{isChips}}" hint-placeholder-val="{{yes}}">
+      <div style="display:flex;flex-wrap:wrap;gap:12px;align-content:flex-start;">
+        <sc-for list="{{chips}}" as="chip" hint-placeholder-count="8">
+          <button type="button" onClick="{{chip.pick}}" class="nv-chip {{chip.cls}}" style="{{chip.style}}"><span class="nv-chip__dot" style="{{chip.dot}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="{{chip.icol}}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="{{chip.d1}}"></path></svg></span><span>{{chip.label}}</span></button>
+        </sc-for>
+      </div>
+    </sc-if>
+    <div style="flex:1 1 auto;min-height:16px;"></div>
+    <button type="button" onClick="{{next}}" class="nv-btn nv-btn--primary"><span>{{cta}}</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--on-ember)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></button>
+  </div>
+  <div style="position:absolute;inset:0;background:var(--night-deep);{{magicVis}}">
+    <div class="p7" style="position:absolute;inset:0;padding:74px 24px 24px;display:flex;flex-direction:column;align-items:flex-start;">
+      <div class="mm-glow" style="position:absolute;top:120px;left:50%;margin-left:-190px;width:380px;height:380px;border-radius:999px;background:radial-gradient(circle, rgba(227,154,46,0.55) 0%, rgba(227,154,46,0) 70%);"></div>
+      <div style="position:relative;align-self:center;"><svg width="180" height="163" viewBox="0 0 220 200" fill="none" class="" style="" role="img" aria-label="Vera, the Nuva moth"><g transform="rotate(0 110 56)"><path d="M120 52 C138 30 156 16 174 8" fill="none" stroke="#B0442B" stroke-width="4.2" stroke-linecap="round"/><circle cx="174" cy="8" r="4.4" fill="#E39A2E"/></g><g transform="rotate(0 110 56)"><path d="M 100 52 C 82 30 64 16 46 8" fill="none" stroke="#B0442B" stroke-width="4.2" stroke-linecap="round"/><circle cx="46" cy="8" r="4.4" fill="#E39A2E"/></g><g transform="rotate(0 110 96)"><path d="M 110 63.88 C 135.93 33.95 178.62 23.98 194.79 41.36 C 208.82 56.18 191.74 84.11 174.66 100.64 C 163.68 110.9 153.92 123.44 145.99 137.69 C 137.45 153.08 114.88 153.65 113.66 132.56 C 112.44 110.33 108.17 83.54 110 63.88 Z" fill="#86AE7E"/><path d="M124 76 C144 56 172 46 190 48" fill="none" stroke="#4F7549" stroke-width="2.6" stroke-linecap="round" opacity="0.45"/><circle cx="163" cy="62" r="10" fill="#E39A2E"/><circle cx="163" cy="62" r="3.8" fill="#FDF8F1"/></g><g transform="rotate(0 110 96)"><path d="M 110 63.88 C 84.07 33.95 41.38 23.98 25.21 41.36 C 11.18 56.18 28.26 84.11 45.34 100.64 C 56.32 110.9 66.08 123.44 74.01 137.69 C 82.55 153.08 105.12 153.65 106.34 132.56 C 107.56 110.33 111.83 83.54 110 63.88 Z" fill="#86AE7E"/><path d="M 96 76 C 76 56 48 46 30 48" fill="none" stroke="#4F7549" stroke-width="2.6" stroke-linecap="round" opacity="0.45"/><circle cx="57" cy="62" r="10" fill="#E39A2E"/><circle cx="57" cy="62" r="3.8" fill="#FDF8F1"/></g><ellipse cx="110" cy="128" rx="23" ry="30" fill="#2A2342"/><circle cx="110" cy="76" r="33" fill="#2A2342"/><ellipse cx="110" cy="132" rx="13" ry="19" fill="#C7DCC2" opacity="0.15"/><ellipse cx="98" cy="74" rx="6.708" ry="8.6" fill="#17132A"/><ellipse cx="122" cy="74" rx="6.708" ry="8.6" fill="#17132A"/><circle cx="95.4" cy="70.6" r="2.7" fill="#FDF8F1"/><circle cx="119.4" cy="70.6" r="2.7" fill="#FDF8F1"/><ellipse cx="86" cy="91" rx="8.5" ry="5" fill="#DE9A8B" opacity="0.5"/><ellipse cx="134" cy="91" rx="8.5" ry="5" fill="#DE9A8B" opacity="0.5"/></svg></div>
+      <span class="nv-eyebrow nv-eyebrow--on-night" style="position:relative;margin-top:14px;">Based on your answers</span>
+      <h1 style="position:relative;margin:16px 0 0;font-family:var(--font-display);font-size:40px;line-height:42px;font-weight:600;letter-spacing:-1px;color:var(--text-on-night);"><span class="l1" style="display:block;">Your symptoms</span><span class="l2" style="display:block;">have a name.</span></h1>
+      <p class="l3" style="position:relative;margin:14px 0 0;font-family:var(--font-display);font-size:19px;line-height:29px;font-weight:500;font-style:italic;color:var(--ember);">Early perimenopause.</p>
+      <p class="mm-body" style="position:relative;margin:18px 0 0;font-family:var(--font-text);font-size:16px;line-height:26px;font-weight:400;color:var(--text-on-night-muted);">Irregular cycles, anxiety spikes and brain fog, starting under a year ago. That pattern has a name, a mechanism, and from today it is trackable.</p>
+      <div style="flex:1 1 auto;"></div>
+      <div class="mm-cta" style="position:relative;width:100%;"><a href="Paywall.dc.html" class="nv-btn nv-btn--primary"><span>See what happens next</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--on-ember)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a></div>
+    </div>
+  </div>
+
+<div class="nv-grain"></div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":393,"height":852}}'>
+class Component extends DCLogic {
+  renderVals() {
+    var self = this;
+    var Q = [
+      { eyebrow: 'Question 1 of 6', title: 'When did you first notice something was different?', fill: 'var(--night)', dark: true,
+        options: [['In the last few months','M12 2v8','m8 6 4-4 4 4'],['Six months to a year ago','M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z',''],
+                  ['One to two years ago','M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Z','M12 6v6l4 2'],['Longer than two years','M8 2v4','M3 10h18']] },
+      { eyebrow: 'Question 2 of 6', title: 'Which symptoms hit you hardest?', fill: 'var(--night)', dark: true, chips: true },
+      { eyebrow: 'Question 3 of 6', title: 'How are your periods right now?', fill: 'var(--night)', dark: true,
+        options: [['Still regular','M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z',''],
+                  ['Shorter and closer together','M19 9a7 7 0 1 0-7 7c4 0 6-2 6-5a4 4 0 0 0-8 0c0 1.5 1 3 3 3',''],
+                  ['Longer gaps, skipping months','M8 2v4','M3 10h18'],['They have stopped','M10.1 2.18a9.93 9.93 0 0 1 3.8 0','M21.82 10.1a9.93 9.93 0 0 1 0 3.8']] },
+      { eyebrow: 'Question 4 of 6', title: 'Have you talked to a doctor about this?', fill: 'var(--night)', dark: true,
+        options: [['Yes, and I was taken seriously','M11 2v2','M5 3H4a2 2 0 0 0-2 2v4a6 6 0 0 0 12 0V5a2 2 0 0 0-2-2h-1'],
+                  ['Yes, and I was dismissed','M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z','M4 22v-7'],
+                  ['Not yet','M11 11m-8 0a8 8 0 1 0 16 0a8 8 0 1 0-16 0','m21 21-4.3-4.3'],
+                  ['I have an appointment coming up','M8 2v4','M3 10h18']] },
+      { eyebrow: 'Question 5 of 6', title: 'What should Nuva help with?', fill: 'var(--luna)', dark: false,
+        options: [['Understanding what is happening','M12 7v14','M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z'],
+                  ['Seeing the pattern over time','M3 3v16a2 2 0 0 0 2 2h16','m19 9-5 5-4-4-3 3'],
+                  ['Knowing what to say to my doctor','M12 20h9','M16.376 3.622a1 1 0 0 1 3.002 3.002L7.368 18.635a2 2 0 0 1-.855.506l-2.872.838a.5.5 0 0 1-.62-.62l.838-2.872a2 2 0 0 1 .506-.854z'],
+                  ['Tracking HRT and how it is working','m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z','m8.5 8.5 7 7']] },
+      { eyebrow: 'Question 6 of 6', title: 'When do you want to check in?', fill: 'var(--luna)', dark: false,
+        options: [['Morning, 7-9am','M12 2v8','m8 6 4-4 4 4'],['Midday, 12-2pm','M12 12m-4 0a4 4 0 1 0 8 0a4 4 0 1 0-8 0','M12 2v2'],
+                  ['Evening, 8-10pm','M12 10V2','m16 6-4 4-4-4'],['I would rather not be reminded','M8.7 3A6 6 0 0 1 18 8a21.3 21.3 0 0 0 .6 5','m2 2 20 20']] }
+    ];
+    var CH = [['Hot flashes','#b0442b','#fdf8f1','d','M14 4v10.54a4 4 0 1 1-4 0V4a2 2 0 0 1 4 0Z'],
+              ['Anxiety','#de9a8b','#1f1b2e','l','M2 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 1.3 0 1.9-.5 2.5-1'],
+              ['Brain fog','#6360a6','#fdf8f1','d','M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z'],
+              ['Insomnia','#35706f','#fdf8f1','d','M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z'],
+              ['Fatigue','#86ae7e','#1f1b2e','l','M2 6h16v12H2z'],
+              ['Irregular periods','#8a4468','#fdf8f1','d','M8 2v4 M16 2v4 M3 10h18'],
+              ['Night sweats','#b0442b','#fdf8f1','d','M7 16.3c2.2 0 4-1.83 4-4.05 0-1.16-.57-2.26-1.71-3.19S7.29 6.75 7 5.3'],
+              ['Losing words','#6360a6','#fdf8f1','d','M3 5h18'],
+              ['Palpitations','#86ae7e','#1f1b2e','l','M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z']];
+    var DISC = ['var(--ember-soft)', 'var(--luna-soft)', 'var(--clay-soft)', 'var(--sand)'];
+    var k = (this.state && this.state.k) || 0;
+    var picks = (this.state && this.state.picks) || {};
+    var chipSel = (this.state && this.state.chipSel) || { 0: true, 2: true };
+    var magic = k > 5;
+    var q = Q[Math.min(k, 5)];
+    var dark = magic ? true : q.dark;
+    var fg = dark ? 'var(--text-on-night)' : 'var(--on-luna)';
+    var segs = [];
+    for (var i = 0; i < 6; i++) {
+      segs.push({ bg: i <= k ? fg : (dark ? 'rgba(253,248,241,0.24)' : 'rgba(31,27,46,0.22)') });
+    }
+    var options = (q.options || []).map(function (o, i) {
+      return {
+        label: o[0], d1: o[1], d2: o[2], disc: DISC[i % 4],
+        cls: picks[k] === i ? 'nv-option--selected' : '',
+        pick: function () { var p = Object.assign({}, picks); p[k] = i; self.setState({ picks: p }); }
+      };
+    });
+    var chips = CH.map(function (c, i) {
+      var on = !!chipSel[i];
+      return {
+        label: c[0], d1: c[4], icol: c[2],
+        cls: on ? 'nv-chip--selected' : '',
+        style: on ? ('background:' + c[1] + ';color:' + c[2] + ';border-color:transparent;') : '',
+        dot: 'background:' + (on ? (c[3] === 'l' ? 'rgba(31,27,46,0.13)' : 'rgba(253,248,241,0.22)') : c[1]) + ';',
+        pick: function () { var x = Object.assign({}, chipSel); x[i] = !x[i]; self.setState({ chipSel: x }); }
+      };
+    });
+    return {
+      k: k, yes: true, isQ: !magic && !q.chips, isChips: !magic && !!q.chips, options: options, chips: chips,
+      fill: magic ? 'var(--night-deep)' : q.fill, fg: fg, eyebrow: magic ? '' : q.eyebrow, title: magic ? '' : q.title,
+      pillBg: dark ? 'rgba(253,248,241,0.14)' : 'rgba(31,27,46,0.1)',
+      backBg: dark ? 'rgba(253,248,241,0.16)' : 'rgba(31,27,46,0.1)',
+      backVis: k === 0 ? 'visibility:hidden;' : '',
+      count: (k + 1) + ' of 6',
+      segs: segs,
+      moth: '',
+      mothLeft: 'calc(' + Math.round((k + 1) * 100 / 6) + '% - 8px)',
+      mothVis: 'display:none;',
+      headerVis: magic ? 'opacity:0;' : '',
+      magicVis: magic ? '' : 'display:none;pointer-events:none;',
+      cta: k === 5 ? 'See what Nuva found' : 'Continue',
+      next: function () { self.setState({ k: Math.min(k + 1, 6) }); },
+      back: function () { self.setState({ k: Math.max(k - 1, 0) }); }
+    };
+  }
+}
+</script>
+</body>
+</html>

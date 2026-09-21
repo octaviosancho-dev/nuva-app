@@ -1,56 +1,92 @@
-# Welcome to your Expo app 👋
+# Nuva
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+An iOS app for women 35–45 who have started experiencing symptoms they can't name — anxiety out of
+nowhere, irregular cycles, brain fog, night sweats — and who don't yet know they're in
+perimenopause. The promise is not "bring data to your doctor". It is **finally understand what's
+happening to you**.
 
-## Get started
+Expo SDK 57 · Expo Router · TypeScript strict · Reanimated 4 · Supabase.
 
-1. Install dependencies
-
-   ```bash
-   npm install
-   ```
-
-2. Start the app
-
-   ```bash
-   npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+## Running it
 
 ```bash
-npm run reset-project
+npm install
+npx expo start
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+Scan the QR with Expo Go, or `npx expo start --ios` for the simulator. Expo Go on SDK 57 requires
+being signed in on both the CLI (`npx expo login`) and the app, with the same account; development
+builds are exempt.
 
-### Other setup steps
+On Windows, if the phone can't reach Metro, the usual cause is the firewall scoping Node's inbound
+rules to the Public profile while the adapter is Private — not the tunnel.
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+### Device builds
 
-## Learn more
+```bash
+npx eas-cli build --profile development --platform ios
+```
 
-To learn more about developing your project with Expo, look at the following resources:
+iOS compiles on Expo's servers; no Mac is needed. A paid Apple Developer Program membership is
+required to sign for a real device. Profiles are in `eas.json`: `development`, `preview`,
+`production`.
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+## Where things are
 
-## Join the community
+```
+src/app/            Expo Router routes — (onboarding), then (app) tabs
+src/components/ui/  the primitives from the design system
+src/constants/      tokens.ts (generated) and nuva.ts (crest, categories, motion)
+src/lib/            storage (MMKV), supabase, analytics, purchases
+design/             the design system — brand book, tokens, motion, components, 36 artboards
+docs/               the product brief and the design system index
+assets/             logo and Vera as SVG, the paper grain tile, app icon PNGs
+scripts/            generate-tokens.mjs
+```
 
-Join our community of developers creating universal apps.
+Two path aliases, resolving to different roots: `@/*` → `src/*` and `@/assets/*` → `assets/*` at
+the repo root.
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+## The design system
+
+`design/` is the visual source of truth. Start at `design/README.md` (the brand book), then
+`docs/DESIGN_SYSTEM.md` for the index and what changed from the retired v1.0.
+
+Build a screen from its artboard in `design/screens/`, not from memory — each file carries the real
+padding, radius, font size and line height. Open any `.dc.html` in a browser to see it rendered;
+the paper grain won't load outside the canvas, which is expected.
+
+`SheetComponents.dc.html` shows every component state side by side and is the fastest way to check
+a primitive once it's built. The four `Flow*.dc.html` files each hold a complete workflow with
+shared state and real transitions — they are the reference for how a flow should *feel*, while the
+per-screen files define what each state *is*.
+
+### Tokens are generated
+
+`src/constants/tokens.ts` is never hand-edited. Change `design/tokens.json`, then:
+
+```bash
+node scripts/generate-tokens.mjs
+```
+
+That is what keeps the app and the design system from drifting apart.
+
+## Screens
+
+| Flow | Artboards |
+|---|---|
+| Onboarding | `Splash` `Main` `Q1Timeline` `Q2Symptoms` `Q3Periods` `Q4Doctor` `Q5Goal` `Q6CheckIn` `MagicMoment` `Paywall` |
+| Account | `Auth` `TrialStarted` |
+| Daily loop | `Today` `TodayEmpty` `LogSelect` `LogSeverity` `LogValidation` `LogSaved` |
+| Learn | `Insights` `InsightOpen` `Patterns` `PatternTrend` |
+| Words, HRT, account | `Words` `Meds` `MedAdd` `You` `Settings` `Reminders` `Report` |
+| Whole workflows | `FlowOnboarding` `FlowLog` `FlowWords` `FlowMeds` |
+| Handoff sheets | `SheetLogo` `SheetComponents` `SheetMotion` |
+
+## Working on this
+
+`CLAUDE.md` holds the agent instructions, including the fourteen rules that break silently — each
+looks fine in a screenshot and is wrong in the product. Read it before writing UI.
+
+`docs/PRODUCT_BRIEF.md` is what we're building and why, including the data model, the analytics
+events and the build order.

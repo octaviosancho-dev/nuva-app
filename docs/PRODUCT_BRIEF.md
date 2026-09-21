@@ -1,6 +1,6 @@
 # Nuva — Product Brief
 
-**v3.0 · September 2026.** Supersedes brief v2.0. The visual section of v2.0 is retired in full — see `DESIGN_SYSTEM.md`, which is the visual source of truth. This document covers what we're building, for whom, and how it's put together.
+**v3.0 · September 2026.** Supersedes brief v2.0. The visual section of v2.0 is retired in full — see `design/`, which is the visual source of truth, indexed by `docs/DESIGN_SYSTEM.md`. This document covers what we're building, for whom, and how it's put together.
 
 ### What changed from v2.0
 
@@ -102,7 +102,7 @@ Benchmarks: Balance ~$50/yr, Caria ~$50/yr, Flo Premium ~$40/yr. The combination
 8  Magic moment  →  Paywall
 ```
 
-Screens 1–4 are designed and approved — pixel specs in `DESIGN_SYSTEM.md §7`. Screens 5–7 follow the same pattern with rotating header colors. The magic moment deliberately breaks the pattern: no progress, no back, no arch.
+All eight screens are designed — one artboard each in `design/screens/`, at real values. Build from the artboard, not from memory. The question screens share a `CrestHeader` whose fill rotates and whose crest stays put between screens, so the flow reads as one surface. The magic moment deliberately breaks the pattern: no progress, no back, no crest.
 
 **Rules:** one question per screen, max 4 options (12 chips on Q2), no paragraph copy during the quiz — it's a conversation, not a form. Back is always available; never trap her. Progress visible from screen 2.
 
@@ -222,13 +222,14 @@ Both configured from day one.
 
 |                             |                                                                                               |
 | --------------------------- | --------------------------------------------------------------------------------------------- |
-| **React Native StyleSheet** | Styling, driven by `constants/tokens.ts`                                                      |
+| **React Native StyleSheet** | Styling, driven by `src/constants/tokens.ts`, generated from `design/tokens.json`             |
 | **Reanimated 4**            | All animation, UI thread. Never the legacy `Animated` API                                     |
 | **Gesture Handler**         | Gestures, swipes, taps                                                                        |
-| **react-native-svg**        | `ArchHeader` arch paths and pattern charts. Not optional — `borderRadius` can't draw the arch |
-| **expo-image**              | Illustrations, with caching                                                                   |
+| **react-native-svg**        | `CrestHeader` crest paths, the logo, Vera and the pattern charts. Not optional — `borderRadius` can't draw the crest |
+| **expo-image**              | Vera's poses and the logo lockups, with caching                                               |
 | **lucide-react-native**     | Icons, outline only                                                                           |
-| **@expo-google-fonts**      | Bricolage Grotesque, DM Sans                                                                  |
+| **@expo-google-fonts**      | Fraunces (display), DM Sans (text)                                                            |
+| **expo-haptics**            | Three events only: option select, log saved, Find Your Words copy                             |
 
 ### Backend
 
@@ -347,8 +348,8 @@ health_report_exported            { destination }
 
 Each milestone ends with something runnable on a device.
 
-1. **Foundation** — Expo + Router + TS strict, fonts loaded and splash gated, `constants/` in place, grain and halftone texture assets, `ArchHeader` and the UI primitives from `DESIGN_SYSTEM.md §5`.
-2. **Onboarding 1–4** — the four approved screens, pixel-matched to the mockups, answers to MMKV.
+1. **Foundation** — Expo + Router + TS strict, fonts loaded and splash gated, `src/constants/` in place, the paper grain overlay at `opacity.grain`, `CrestHeader`, `Button`, `OptionCard`, `SymptomChip` and the Vera and Logo SVG components, all against `design/components/*/README.md`.
+2. **Onboarding 1–4** — welcome and Q1–Q3, built from their artboards, answers to MMKV.
 3. **Onboarding 5–8** — Q4–Q6, magic moment, paywall shell.
 4. **Auth + Supabase** — Apple and Google, schema with RLS, sync MMKV answers up on first login. Seed `symptoms`, `validation_stats`, `word_templates`.
 5. **Paywall live** — RevenueCat entitlements, Superwall template matching the tokens, trial flow end to end.

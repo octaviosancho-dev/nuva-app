@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" fill="none" role="img" aria-label="Nuva app icon">
+<rect width="1024" height="1024" fill="#0B0814"/>
+<g transform="translate(172.8 184.8) scale(10.6)">
+<path d="M33 15 C36.5 8.6 40 3.4 43.2 0.8" fill="none" stroke="#E39A2E" stroke-width="2.3" stroke-linecap="round"/>
+<path d="M 31 15 C 27.5 8.6 24 3.4 20.8 0.8" fill="none" stroke="#E39A2E" stroke-width="2.3" stroke-linecap="round"/>
+<path d="M32 17.5 C40.5 7 54.5 3.5 59.8 9.6 C64.4 14.8 58.8 24.6 53.2 30.4 C49.6 34 46.4 38.4 43.8 43.4 C41 48.8 33.6 49 33.2 41.6 C32.8 33.8 31.4 24.4 32 17.5 Z" fill="#4F7549"/>
+<path d="M 32 17.5 C 23.5 7 9.5 3.5 4.2 9.6 C -0.4 14.8 5.2 24.6 10.8 30.4 C 14.4 34 17.6 38.4 20.2 43.4 C 23 48.8 30.4 49 30.8 41.6 C 31.2 33.8 32.6 24.4 32 17.5 Z" fill="#4F7549"/>
+<circle cx="46.2" cy="20.4" r="3.1" fill="#E39A2E"/>
+<circle cx="17.8" cy="20.4" r="3.1" fill="#E39A2E"/>
+<path d="M32 12.6 C34.7 12.6 36.1 15.3 35.9 18.6 C35.6 24.6 35 33.2 34.3 39.4 C34 42.9 33.1 44.8 32 44.8 C30.9 44.8 30 42.9 29.7 39.4 C29 33.2 28.4 24.6 28.1 18.6 C27.9 15.3 29.3 12.6 32 12.6 Z" fill="#FDF8F1"/>
+</g>
+</svg>

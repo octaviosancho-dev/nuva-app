@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Motion, live</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500..600;1,9..144,500..600&amp;family=DM+Sans:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+
+:root{
+--canvas:#faf5ee;--surface:#fffcf7;--surface-sunken:#f1e9dd;--surface-raised:#ffffff;
+--night:#2a2342;--night-deep:#17132a;--scrim:rgba(31,27,46,0.55);
+--text-primary:#1f1b2e;--text-secondary:#57506b;--text-tertiary:#6e6684;--text-link:#b0442b;
+--text-on-night:#fdf8f1;--text-on-night-muted:#beb5cc;
+--ember:#e39a2e;--ember-deep:#8a5a12;--ember-soft:#f8e4be;
+--clay:#b0442b;--clay-soft:#f3d9ce;--luna:#86ae7e;--luna-deep:#4f7549;--luna-soft:#c7dcc2;
+--blush:#de9a8b;--sand:#ebd9be;--iris:#6360a6;--tide:#35706f;--plum:#8a4468;
+--on-ember:#1f1b2e;--on-clay:#fdf8f1;--on-luna:#1f1b2e;--on-luna-soft:#1f1b2e;--on-blush:#1f1b2e;
+--on-sand:#1f1b2e;--on-iris:#fdf8f1;--on-tide:#fdf8f1;--on-plum:#fdf8f1;
+--severity-1:#cadcc4;--severity-2:#ebd2a0;--severity-3:#e39a2e;--severity-4:#b0442b;
+--line:#e6daca;--line-strong:#9c8b72;--line-on-night:rgba(253,248,241,0.2);--focus-ring:#1f1b2e;
+--space-1:4px;--space-2:8px;--space-3:12px;--space-4:16px;--space-5:20px;--space-6:24px;
+--space-7:28px;--space-8:32px;--space-10:40px;--space-12:48px;--space-16:64px;--space-20:80px;
+--radius-xs:8px;--radius-sm:12px;--radius-md:16px;--radius-lg:22px;--radius-xl:28px;
+--radius-2xl:36px;--radius-pill:999px;
+--shadow-xs:0 1px 2px rgba(31,27,46,0.06);--shadow-sm:0 2px 8px rgba(31,27,46,0.08);
+--shadow-md:0 6px 18px rgba(31,27,46,0.1);--shadow-lg:0 16px 36px rgba(31,27,46,0.14);
+--shadow-ember:0 8px 20px rgba(227,154,46,0.34);
+--opacity-disabled:0.4;--opacity-pressed:0.72;--opacity-grain:0.05;
+--font-display:Fraunces,Georgia,serif;--font-text:"DM Sans",system-ui,sans-serif;
+--e-standard:cubic-bezier(0.2,0.8,0.2,1);--e-enter:cubic-bezier(0,0,0.2,1);
+--e-exit:cubic-bezier(0.4,0,1,1);--e-breathe:cubic-bezier(0.45,0,0.55,1);
+}
+
+*,*::before,*::after{box-sizing:border-box;}
+body{margin:0;background:var(--canvas);color:var(--text-primary);font-family:var(--font-text);-webkit-font-smoothing:antialiased;}
+button{font-family:inherit;border:none;background:none;padding:0;cursor:pointer;color:inherit;}
+a{color:var(--text-link);}
+.nv-eyebrow{display:inline-flex;align-items:center;height:26px;padding:0 12px;border-radius:var(--radius-pill);font-family:var(--font-text);font-size:11px;font-weight:500;letter-spacing:0.9px;text-transform:uppercase;white-space:nowrap;}
+.nv-eyebrow--on-night{background:rgba(253,248,241,0.14);color:var(--text-on-night);}
+.nv-eyebrow--on-light{background:var(--surface-sunken);color:var(--text-secondary);}
+.nv-eyebrow--ember{background:var(--ember);color:var(--on-ember);}
+.nv-btn{display:inline-flex;align-items:center;justify-content:center;gap:var(--space-2);width:100%;min-height:56px;padding:0 var(--space-6);border:none;border-radius:var(--radius-pill);font-family:var(--font-text);font-size:16px;font-weight:500;letter-spacing:-0.1px;cursor:pointer;text-decoration:none;transition:transform 160ms var(--e-standard),opacity 240ms var(--e-standard);}
+.nv-btn:active{transform:scale(0.98);}
+.nv-btn--primary{background:var(--ember);color:var(--on-ember);box-shadow:var(--shadow-ember);}
+.nv-btn--secondary{background:var(--sand);color:var(--on-sand);}
+.nv-btn--ghost{background:transparent;color:var(--text-link);box-shadow:none;}
+.nv-btn--on-night{background:var(--text-on-night);color:var(--night);box-shadow:none;}
+.nv-btn--disabled{background:var(--ember);color:var(--on-ember);opacity:var(--opacity-disabled);box-shadow:none;cursor:not-allowed;}
+.nv-btn--compact{min-height:42px;font-size:14px;padding:0 var(--space-5);width:auto;}
+.nv-card{background:var(--surface);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);padding:var(--space-5);}
+.nv-card--flat{box-shadow:none;border:1px solid var(--line);}
+.nv-option{display:flex;align-items:center;gap:var(--space-4);width:100%;min-height:72px;padding:var(--space-4) var(--space-5);border:2px solid transparent;border-radius:var(--radius-lg);background:var(--surface);box-shadow:var(--shadow-xs);text-align:left;cursor:pointer;transition:border-color 160ms,box-shadow 160ms,transform 160ms;}
+.nv-option:active{transform:scale(0.99);}
+.nv-option--selected{border-color:var(--text-primary);box-shadow:var(--shadow-md);}
+.nv-option__icon{flex:0 0 auto;width:44px;height:44px;border-radius:var(--radius-pill);display:grid;place-items:center;}
+.nv-option__body{flex:1 1 auto;min-width:0;}
+.nv-option__title{display:block;font-size:15px;font-weight:500;line-height:20px;color:var(--text-primary);}
+.nv-option__sub{display:block;font-size:13.5px;line-height:20px;color:var(--text-secondary);margin-top:2px;}
+.nv-option__check{flex:0 0 auto;width:26px;height:26px;border-radius:var(--radius-pill);display:grid;place-items:center;}
+.nv-option--selected .nv-option__check{background:var(--text-primary);}
+.nv-option__check svg{opacity:0;transition:opacity 160ms;}
+.nv-option--selected .nv-option__check svg{opacity:1;}
+.nv-chip{display:inline-flex;align-items:center;gap:var(--space-2);min-height:46px;padding:var(--space-2) var(--space-4) var(--space-2) var(--space-2);border:1.5px solid var(--line-strong);border-radius:var(--radius-pill);background:var(--surface);color:var(--text-primary);font-family:var(--font-text);font-size:13px;font-weight:500;cursor:pointer;transition:background 160ms,border-color 160ms,transform 160ms,color 160ms;}
+.nv-chip:active{transform:scale(0.97);}
+.nv-chip__dot{width:30px;height:30px;border-radius:var(--radius-pill);display:grid;place-items:center;flex:0 0 auto;transition:background 160ms;}
+.nv-chip--selected{border-color:transparent;box-shadow:var(--shadow-sm);}
+.nv-sev{display:flex;gap:var(--space-2);}
+.nv-sev__step{flex:1 1 0;display:flex;flex-direction:column;align-items:center;gap:var(--space-2);padding:var(--space-3) var(--space-1);border:1.5px solid transparent;border-radius:var(--radius-md);background:var(--surface-sunken);cursor:pointer;transition:border-color 160ms,background 160ms,opacity 160ms;}
+.nv-sev__swatch{width:100%;height:26px;border-radius:var(--radius-xs);}
+.nv-sev__label{font-size:12px;line-height:16px;color:var(--text-secondary);}
+.nv-sev__step--selected{border-color:var(--text-primary);background:var(--surface);}
+.nv-sev__step--selected .nv-sev__label{color:var(--text-primary);font-weight:500;}
+.nv-link{color:var(--text-link);text-decoration:underline;text-underline-offset:2px;font-weight:500;cursor:pointer;}
+.nv-link:active{opacity:var(--opacity-pressed);}
+.nv-link--on-night{color:var(--ember);}
+.nv-tabular{font-variant-numeric:tabular-nums;}
+
+@keyframes nv-rise{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:none;}}
+@keyframes nv-rise20{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:none;}}
+@keyframes nv-line{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:none;}}
+@keyframes nv-fade{from{opacity:0;}to{opacity:1;}}
+@keyframes nv-pop{0%{opacity:0;transform:scale(0.9);}100%{opacity:1;transform:scale(1);}}
+@keyframes nv-breathe{0%,100%{transform:translateY(0) scaleY(1);}50%{transform:translateY(-1.5px) scaleY(1.015);}}
+@keyframes nv-bloom{0%{opacity:0;transform:scale(0.7);}55%{opacity:0.13;transform:scale(1.04);}100%{opacity:0.08;transform:scale(1);}}
+@keyframes nv-wings{0%{opacity:0;transform:scaleX(0.15);}62%{opacity:1;transform:scaleX(1.06);}100%{opacity:1;transform:scaleX(1);}}
+@keyframes nv-draw{from{stroke-dashoffset:60;}to{stroke-dashoffset:0;}}
+@keyframes nv-seg{from{transform:scaleX(0);}to{transform:scaleX(1);}}
+@keyframes nv-pulse{0%,100%{transform:scaleX(1);}50%{transform:scaleX(1.06);}}
+@keyframes nv-motes{0%{opacity:0.9;transform:translateY(0);}100%{opacity:0;transform:translateY(-6px);}}
+@keyframes nv-spark{0%{opacity:0;transform:scale(0);}45%{opacity:1;transform:scale(1);}100%{opacity:0;transform:scale(0.4);}}
+@keyframes nv-drawline{from{stroke-dashoffset:900;}to{stroke-dashoffset:0;}}
+.a-rise{animation:nv-rise 240ms var(--e-enter) both;}
+.a-rise20{animation:nv-rise20 560ms var(--e-enter) both;}
+.a-fade{animation:nv-fade 380ms var(--e-enter) both;}
+.a-line{animation:nv-line 240ms var(--e-enter) both;}
+.a-pop{animation:nv-pop 160ms var(--e-standard) both;}
+.a-breathe{animation:nv-breathe 3200ms var(--e-breathe) infinite;transform-origin:50% 100%;}
+.d1{animation-delay:44ms;}.d2{animation-delay:88ms;}.d3{animation-delay:132ms;}.d4{animation-delay:176ms;}
+.d5{animation-delay:220ms;}.d6{animation-delay:264ms;}.d7{animation-delay:308ms;}.d8{animation-delay:352ms;}
+@media (prefers-reduced-motion: reduce){
+.a-rise,.a-rise20,.a-line,.a-pop,.a-fade{animation:nv-fade 160ms both;}
+.a-breathe{animation:none;}
+}
+
+.nv-grain{position:absolute;inset:0;background-image:url(/_blob/88ac88ddea6e97317a3577b9c2b9e59f);background-size:100px 100px;opacity:0.05;pointer-events:none;z-index:8;}
+.nv-screen-frame{position:relative;overflow:hidden;font-family:var(--font-text);color:var(--text-primary);}
+
+@keyframes dm-wings{0%,8%{transform:scaleX(0.15);opacity:0;}46%{transform:scaleX(1.06);opacity:1;}56%,100%{transform:scaleX(1);opacity:1;}}
+@keyframes dm-ant{0%,6%{stroke-dashoffset:60;}40%,100%{stroke-dashoffset:0;}}
+@keyframes dm-rise{0%,10%{opacity:0;transform:translateY(20px);}55%,100%{opacity:1;transform:none;}}
+@keyframes dm-seg{0%,12%{transform:scaleX(0);}45%,100%{transform:scaleX(1);}}
+@keyframes dm-press{0%,70%,100%{transform:scale(1);}80%{transform:scale(0.98);}}
+@keyframes dm-stag{0%,6%{opacity:0;transform:translateY(12px);}40%,100%{opacity:1;transform:none;}}
+.dm-wr,.dm-wl{transform-origin:32px 30px;animation:dm-wings 4000ms var(--e-standard) infinite;}
+.dm-ant{stroke-dasharray:60;animation:dm-ant 4000ms var(--e-enter) infinite;}
+.dm-rise{animation:dm-rise 4000ms var(--e-enter) infinite;}
+.dm-seg{transform-origin:left;animation:dm-seg 4000ms var(--e-standard) infinite;}
+.dm-press{animation:dm-press 2400ms var(--e-standard) infinite;}
+.dm-stag{animation:dm-stag 4000ms var(--e-enter) infinite;}
+.dm-stag:nth-child(2){animation-delay:44ms;}.dm-stag:nth-child(3){animation-delay:88ms;}.dm-stag:nth-child(4){animation-delay:132ms;}
+@media (prefers-reduced-motion: reduce){
+.dm-wr,.dm-wl,.dm-ant,.dm-rise,.dm-seg,.dm-press,.dm-stag,.a-breathe{animation:none;opacity:1;transform:none;stroke-dashoffset:0;}}
+
+</style>
+</helmet>
+<div class="nv-screen-frame" style="width: 1240px; height: 1500px; background: var(--canvas);">
+  <div style="width:1240px;height:1500px;background:var(--canvas);padding:56px 56px 64px;position:relative;">
+    <div style="margin-bottom:34px;">
+      <span style="display:block;font-family:var(--font-text);font-size:11px;line-height:14px;font-weight:500;letter-spacing:0.9px;text-transform:uppercase;color:var(--text-tertiary);">Nuva · handoff</span>
+      <h1 style="margin:8px 0 0;font-family:var(--font-display);font-size:40px;line-height:42px;font-weight:600;letter-spacing:-1px;color:var(--text-primary);">Motion, live</h1>
+      <p style="margin:10px 0 0;max-width:700px;font-family:var(--font-text);font-size:15px;line-height:23px;font-weight:400;color:var(--text-secondary);">Every animation answers one of three questions: where did this come from, what did I just change, or what is the app doing right now. Anything that answers none of them is decoration and does not ship. The demos below run the real durations and easings.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3, minmax(0, 1fr));gap:24px;align-items:start;">
+      <section style="grid-column:span 1;background:var(--surface);border-radius:28px;padding:24px;box-shadow:var(--shadow-sm);display:flex;flex-direction:column;gap:18px;">
+        <div><h2 style="margin:0;font-family:var(--font-display);font-size:21px;line-height:27px;font-weight:600;letter-spacing:-0.2px;color:var(--text-primary);">Splash — wings open</h2><p style="margin:6px 0 0;font-family:var(--font-text);font-size:13.5px;line-height:20px;font-weight:400;color:var(--text-secondary);">560ms on the bloom spring from scaleX 0.15, antennae drawing at +180ms, eyespots at +320ms, the wordmark rising at +420ms. 800ms total, then hold 400 and hand off.</p></div>
+        <div style="background:var(--night-deep);border-radius:22px;padding:28px;display:grid;place-items:center;"><svg width="96" height="72.7" viewBox="-1 0 66 50" fill="none" role="img" aria-label="Nuva"><path class="dm-ant" d="M33 15 C36.5 8.6 40 3.4 43.2 0.8" fill="none" stroke="#E39A2E" stroke-width="2.3" stroke-linecap="round"/><path class="dm-ant" d="M 31 15 C 27.5 8.6 24 3.4 20.8 0.8" fill="none" stroke="#E39A2E" stroke-width="2.3" stroke-linecap="round"/><path class="dm-wr" d="M32 17.5 C40.5 7 54.5 3.5 59.8 9.6 C64.4 14.8 58.8 24.6 53.2 30.4 C49.6 34 46.4 38.4 43.8 43.4 C41 48.8 33.6 49 33.2 41.6 C32.8 33.8 31.4 24.4 32 17.5 Z" fill="#86AE7E"/><path class="dm-wl" d="M 32 17.5 C 23.5 7 9.5 3.5 4.2 9.6 C -0.4 14.8 5.2 24.6 10.8 30.4 C 14.4 34 17.6 38.4 20.2 43.4 C 23 48.8 30.4 49 30.8 41.6 C 31.2 33.8 32.6 24.4 32 17.5 Z" fill="#86AE7E"/><circle class="dm-eye" cx="46.2" cy="20.4" r="3.1" fill="#E39A2E"/><circle class="dm-eye" cx="17.8" cy="20.4" r="3.1" fill="#E39A2E"/><path d="M32 12.6 C34.7 12.6 36.1 15.3 35.9 18.6 C35.6 24.6 35 33.2 34.3 39.4 C34 42.9 33.1 44.8 32 44.8 C30.9 44.8 30 42.9 29.7 39.4 C29 33.2 28.4 24.6 28.1 18.6 C27.9 15.3 29.3 12.6 32 12.6 Z" fill="#FDF8F1"/></svg></div><span style="display:block;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11.5px;line-height:18px;color:var(--text-primary);">bloom { damping 12, stiffness 140, mass 1.1 } · reveal 560ms</span>
+      </section>
+      <section style="grid-column:span 1;background:var(--surface);border-radius:28px;padding:24px;box-shadow:var(--shadow-sm);display:flex;flex-direction:column;gap:18px;">
+        <div><h2 style="margin:0;font-family:var(--font-display);font-size:21px;line-height:27px;font-weight:600;letter-spacing:-0.2px;color:var(--text-primary);">Vera — idle breathe</h2><p style="margin:6px 0 0;font-family:var(--font-text);font-size:13.5px;line-height:20px;font-weight:400;color:var(--text-secondary);">scaleY 1 → 1.015 and translateY −1.5 over 3200ms on the breathe curve, looping. It runs only where nothing is being read.</p></div>
+        <div style="background:var(--canvas);border-radius:22px;padding:18px;display:grid;place-items:center;"><svg width="150" height="136" viewBox="0 0 220 200" fill="none" class="a-breathe" style="" role="img" aria-label="Vera, the Nuva moth"><g transform="rotate(0 110 56)"><path d="M120 52 C138 30 156 16 174 8" fill="none" stroke="#B0442B" stroke-width="4.2" stroke-linecap="round"/><circle cx="174" cy="8" r="4.4" fill="#E39A2E"/></g><g transform="rotate(0 110 56)"><path d="M 100 52 C 82 30 64 16 46 8" fill="none" stroke="#B0442B" stroke-width="4.2" stroke-linecap="round"/><circle cx="46" cy="8" r="4.4" fill="#E39A2E"/></g><g transform="rotate(0 110 96)"><path d="M 110 63.88 C 135.93 33.95 178.62 23.98 194.79 41.36 C 208.82 56.18 191.74 84.11 174.66 100.64 C 163.68 110.9 153.92 123.44 145.99 137.69 C 137.45 153.08 114.88 153.65 113.66 132.56 C 112.44 110.33 108.17 83.54 110 63.88 Z" fill="#86AE7E"/><path d="M124 76 C144 56 172 46 190 48" fill="none" stroke="#4F7549" stroke-width="2.6" stroke-linecap="round" opacity="0.45"/><circle cx="163" cy="62" r="10" fill="#E39A2E"/><circle cx="163" cy="62" r="3.8" fill="#FDF8F1"/></g><g transform="rotate(0 110 96)"><path d="M 110 63.88 C 84.07 33.95 41.38 23.98 25.21 41.36 C 11.18 56.18 28.26 84.11 45.34 100.64 C 56.32 110.9 66.08 123.44 74.01 137.69 C 82.55 153.08 105.12 153.65 106.34 132.56 C 107.56 110.33 111.83 83.54 110 63.88 Z" fill="#86AE7E"/><path d="M 96 76 C 76 56 48 46 30 48" fill="none" stroke="#4F7549" stroke-width="2.6" stroke-linecap="round" opacity="0.45"/><circle cx="57" cy="62" r="10" fill="#E39A2E"/><circle cx="57" cy="62" r="3.8" fill="#FDF8F1"/></g><ellipse cx="110" cy="128" rx="23" ry="30" fill="#2A2342"/><circle cx="110" cy="76" r="33" fill="#2A2342"/><ellipse cx="110" cy="132" rx="13" ry="19" fill="#C7DCC2" opacity="0.15"/><ellipse cx="98" cy="74" rx="6.708" ry="8.6" fill="#17132A"/><ellipse cx="122" cy="74" rx="6.708" ry="8.6" fill="#17132A"/><circle cx="95.4" cy="70.6" r="2.7" fill="#FDF8F1"/><circle cx="119.4" cy="70.6" r="2.7" fill="#FDF8F1"/><ellipse cx="86" cy="91" rx="8.5" ry="5" fill="#DE9A8B" opacity="0.5"/><ellipse cx="134" cy="91" rx="8.5" ry="5" fill="#DE9A8B" opacity="0.5"/></svg></div><span style="display:block;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11.5px;line-height:18px;color:var(--text-primary);">ambient 3200ms · breathe [0.45, 0, 0.55, 1]</span>
+      </section>
+      <section style="grid-column:span 1;background:var(--surface);border-radius:28px;padding:24px;box-shadow:var(--shadow-sm);display:flex;flex-direction:column;gap:18px;">
+        <div><h2 style="margin:0;font-family:var(--font-display);font-size:21px;line-height:27px;font-weight:600;letter-spacing:-0.2px;color:var(--text-primary);">The validation reveal</h2><p style="margin:6px 0 0;font-family:var(--font-text);font-size:13.5px;line-height:20px;font-weight:400;color:var(--text-secondary);">The card rises 20px over 560ms while the number counts from zero on the UI thread. The sentence follows at +280ms. Nothing else on the screen moves.</p></div>
+        <div style="background:var(--canvas);border-radius:22px;padding:18px;"><div class="dm-rise" style="background:var(--night);border-radius:22px;padding:18px;box-shadow:var(--shadow-lg);"><span class="nv-tabular" style="font-family:var(--font-display);font-size:34px;line-height:36px;font-weight:600;letter-spacing:-0.6px;font-variant-numeric:tabular-nums;color:var(--ember);">78%</span><p style="margin:6px 0 0;font-family:var(--font-text);font-size:13.5px;line-height:20px;font-weight:400;color:var(--text-on-night);">of women report this before their cycle changes.</p></div></div><span style="display:block;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11.5px;line-height:18px;color:var(--text-primary);">reveal 560ms · enter [0, 0, 0.2, 1] · tabular numerals so it cannot resize</span>
+      </section>
+      <section style="grid-column:span 1;background:var(--surface);border-radius:28px;padding:24px;box-shadow:var(--shadow-sm);display:flex;flex-direction:column;gap:18px;">
+        <div><h2 style="margin:0;font-family:var(--font-display);font-size:21px;line-height:27px;font-weight:600;letter-spacing:-0.2px;color:var(--text-primary);">ProgressTrail</h2><p style="margin:6px 0 0;font-family:var(--font-text);font-size:13.5px;line-height:20px;font-weight:400;color:var(--text-secondary);">Only the newly filled segment animates, scaleX 0 → 1 from the left over 240ms. Segments already filled hold; the moth travels to the new boundary on the settle spring.</p></div>
+        <div style="background:var(--night);border-radius:22px;padding:20px;display:flex;align-items:center;gap:12px;"><span style="flex:1 1 auto;display:flex;gap:5px;"><span class="" style="flex:1;height:3px;border-radius:999px;background:var(--text-on-night);"></span><span class="" style="flex:1;height:3px;border-radius:999px;background:var(--text-on-night);"></span><span class="dm-seg" style="flex:1;height:3px;border-radius:999px;background:var(--text-on-night);"></span><span class="" style="flex:1;height:3px;border-radius:999px;background:rgba(253,248,241,0.24);"></span><span class="" style="flex:1;height:3px;border-radius:999px;background:rgba(253,248,241,0.24);"></span><span class="" style="flex:1;height:3px;border-radius:999px;background:rgba(253,248,241,0.24);"></span></span><span class="nv-tabular" style="font-family:var(--font-text);font-size:12px;line-height:17px;font-weight:400;color:var(--text-on-night-muted);">3 of 6</span></div><span style="display:block;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11.5px;line-height:18px;color:var(--text-primary);">base 240ms · standard [0.2, 0.8, 0.2, 1]</span>
+      </section>
+      <section style="grid-column:span 1;background:var(--surface);border-radius:28px;padding:24px;box-shadow:var(--shadow-sm);display:flex;flex-direction:column;gap:18px;">
+        <div><h2 style="margin:0;font-family:var(--font-display);font-size:21px;line-height:27px;font-weight:600;letter-spacing:-0.2px;color:var(--text-primary);">List stagger</h2><p style="margin:6px 0 0;font-family:var(--font-text);font-size:13.5px;line-height:20px;font-weight:400;color:var(--text-secondary);">44ms between siblings, translateY 12 → 0 with a fade, capped at 8 items. Past that, reveal the rest together.</p></div>
+        <div style="display:flex;flex-direction:column;gap:10px;"><div class="dm-stag" style="display:flex;align-items:center;gap:12px;background:var(--canvas);border-radius:16px;padding:12px 14px;"><span style="width:30px;height:30px;border-radius:999px;background:var(--clay);"></span><span style="font-family:var(--font-text);font-size:15px;line-height:20px;font-weight:500;color:var(--text-primary);">Hot flashes</span></div><div class="dm-stag" style="display:flex;align-items:center;gap:12px;background:var(--canvas);border-radius:16px;padding:12px 14px;"><span style="width:30px;height:30px;border-radius:999px;background:var(--blush);"></span><span style="font-family:var(--font-text);font-size:15px;line-height:20px;font-weight:500;color:var(--text-primary);">Anxiety</span></div><div class="dm-stag" style="display:flex;align-items:center;gap:12px;background:var(--canvas);border-radius:16px;padding:12px 14px;"><span style="width:30px;height:30px;border-radius:999px;background:var(--iris);"></span><span style="font-family:var(--font-text);font-size:15px;line-height:20px;font-weight:500;color:var(--text-primary);">Brain fog</span></div><div class="dm-stag" style="display:flex;align-items:center;gap:12px;background:var(--canvas);border-radius:16px;padding:12px 14px;"><span style="width:30px;height:30px;border-radius:999px;background:var(--tide);"></span><span style="font-family:var(--font-text);font-size:15px;line-height:20px;font-weight:500;color:var(--text-primary);">Insomnia</span></div></div><span style="display:block;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11.5px;line-height:18px;color:var(--text-primary);">stagger 44ms · base 240ms</span>
+      </section>
+      <section style="grid-column:span 1;background:var(--surface);border-radius:28px;padding:24px;box-shadow:var(--shadow-sm);display:flex;flex-direction:column;gap:18px;">
+        <div><h2 style="margin:0;font-family:var(--font-display);font-size:21px;line-height:27px;font-weight:600;letter-spacing:-0.2px;color:var(--text-primary);">Press</h2><p style="margin:6px 0 0;font-family:var(--font-text);font-size:13.5px;line-height:20px;font-weight:400;color:var(--text-secondary);">scale 1 → 0.98 on the press spring. The ember glow does not animate — it is the one static thing about the most important tap.</p></div>
+        <div class="dm-press" style="max-width:300px;"><button type="button" class="nv-btn nv-btn--primary " style=""><span>Continue</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--on-ember)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></button></div><span style="display:block;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11.5px;line-height:18px;color:var(--text-primary);">press { damping 18, stiffness 320, mass 0.7 }</span>
+      </section>
+      <section style="grid-column:span 1;background:var(--surface);border-radius:28px;padding:24px;box-shadow:var(--shadow-sm);display:flex;flex-direction:column;gap:18px;">
+        <div><h2 style="margin:0;font-family:var(--font-display);font-size:21px;line-height:27px;font-weight:600;letter-spacing:-0.2px;color:var(--text-primary);">The constants</h2><p style="margin:6px 0 0;font-family:var(--font-text);font-size:13.5px;line-height:20px;font-weight:400;color:var(--text-secondary);">Ported from Nuva.MOTION in the bundle. Do not retype the numbers — import them.</p></div>
+        <div style="background:var(--canvas);border-radius:22px;padding:18px;"><span style="display:block;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11.5px;line-height:18px;color:var(--text-primary);">duration &nbsp;instant 90 · quick 160 · base 240 · slow 380 · reveal 560 · ambient 3200</span><span style="display:block;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11.5px;line-height:18px;color:var(--text-primary);">easing &nbsp;&nbsp;&nbsp;standard [0.2, 0.8, 0.2, 1] &nbsp;enter [0, 0, 0.2, 1]</span><span style="display:block;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11.5px;line-height:18px;color:var(--text-primary);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;exit [0.4, 0, 1, 1] &nbsp;breathe [0.45, 0, 0.55, 1]</span><span style="display:block;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11.5px;line-height:18px;color:var(--text-primary);">spring &nbsp;&nbsp;&nbsp;press · settle · bloom</span><span style="display:block;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11.5px;line-height:18px;color:var(--text-primary);">stagger &nbsp;&nbsp;44ms between siblings</span></div><p style="margin:0;font-family:var(--font-text);font-size:13.5px;line-height:20px;font-weight:400;color:var(--text-secondary);">Reanimated 4 on the UI thread. The legacy Animated API is not used anywhere, and no runOnJS inside a gesture or a frame callback.</p>
+      </section>
+      <section style="grid-column:span 1;background:var(--surface);border-radius:28px;padding:24px;box-shadow:var(--shadow-sm);display:flex;flex-direction:column;gap:18px;">
+        <div><h2 style="margin:0;font-family:var(--font-display);font-size:21px;line-height:27px;font-weight:600;letter-spacing:-0.2px;color:var(--text-primary);">Reduced motion</h2><p style="margin:6px 0 0;font-family:var(--font-text);font-size:13.5px;line-height:20px;font-weight:400;color:var(--text-secondary);">Not “no motion”. With useReducedMotion() true, transforms and loops stop, opacity cross-fades at 160ms remain, and every state change still happens. Pose swaps still fire, because the pose carries meaning.</p></div>
+        <ul style="margin:0;padding:0 0 0 18px;font-family:var(--font-text);font-size:13.5px;line-height:20px;font-weight:400;color:var(--text-secondary);"><li>Screen transition → cross-fade, no slide</li><li>Validation → card fades, number appears at its value</li><li>Trail → segment fills instantly, the moth jumps</li><li>Vera → pose swaps, no breathe, no motes</li><li>Chart → line and area render complete</li></ul><p style="margin:0;font-family:var(--font-text);font-size:13.5px;line-height:20px;font-weight:400;color:var(--text-secondary);">Users managing anxiety symptoms need this, and the artboards on this canvas honour it too.</p>
+      </section>
+      <section style="grid-column:span 1;background:var(--surface);border-radius:28px;padding:24px;box-shadow:var(--shadow-sm);display:flex;flex-direction:column;gap:18px;">
+        <div><h2 style="margin:0;font-family:var(--font-display);font-size:21px;line-height:27px;font-weight:600;letter-spacing:-0.2px;color:var(--text-primary);">Haptics</h2><p style="margin:6px 0 0;font-family:var(--font-text);font-size:13.5px;line-height:20px;font-weight:400;color:var(--text-secondary);">Three events, and nothing else vibrates.</p></div>
+        <div style="background:var(--canvas);border-radius:22px;padding:18px;"><span style="display:block;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11.5px;line-height:18px;color:var(--text-primary);">option select &nbsp;&nbsp;&nbsp;&nbsp;selectionAsync()</span><span style="display:block;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11.5px;line-height:18px;color:var(--text-primary);">log saved &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;notificationAsync(Success)</span><span style="display:block;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11.5px;line-height:18px;color:var(--text-primary);">words copied &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;notificationAsync(Success)</span></div>
+      </section>
+      <section style="grid-column:span 3;background:var(--surface);border-radius:28px;padding:24px;box-shadow:var(--shadow-sm);display:flex;flex-direction:column;gap:18px;">
+        <div><h2 style="margin:0;font-family:var(--font-display);font-size:21px;line-height:27px;font-weight:600;letter-spacing:-0.2px;color:var(--text-primary);">Push copy, by segment</h2><p style="margin:6px 0 0;font-family:var(--font-text);font-size:13.5px;line-height:20px;font-weight:400;color:var(--text-secondary);">Exact strings from the brief. Sentence case, no emoji, no exclamation marks — the voice holds in a notification too.</p></div>
+        <div style="display:flex;flex-direction:column;gap:18px;"><div><span class="nv-eyebrow" style="background:var(--sand);color:var(--text-primary);">Free · pre-paywall</span><div style="margin-top:10px;background:var(--canvas);border-radius:18px;padding:14px 16px;"><p style="margin:0;font-family:var(--font-text);font-size:15px;line-height:20px;font-weight:500;color:var(--text-primary);">Did you know anxiety spikes are one of the first signs of perimenopause?</p><p style="margin:4px 0 0;font-family:var(--font-text);font-size:13.5px;line-height:20px;font-weight:400;color:var(--text-secondary);">Open to learn why.</p></div><div style="margin-top:10px;background:var(--canvas);border-radius:18px;padding:14px 16px;"><p style="margin:0;font-family:var(--font-text);font-size:15px;line-height:20px;font-weight:500;color:var(--text-primary);">Your body has a pattern. Log today to start seeing it.</p><p style="margin:4px 0 0;font-family:var(--font-text);font-size:13.5px;line-height:20px;font-weight:400;color:var(--text-secondary);">Sent at the hour she chose in Q6.</p></div></div><div><span class="nv-eyebrow" style="background:var(--ember-soft);color:var(--text-primary);">Trial · 3 days</span><div style="margin-top:10px;background:var(--canvas);border-radius:18px;padding:14px 16px;"><p style="margin:0;font-family:var(--font-text);font-size:15px;line-height:20px;font-weight:500;color:var(--text-primary);">Day 2 — your first insight is ready.</p><p style="margin:4px 0 0;font-family:var(--font-text);font-size:13.5px;line-height:20px;font-weight:400;color:var(--text-secondary);">This one surprised a lot of women.</p></div><div style="margin-top:10px;background:var(--canvas);border-radius:18px;padding:14px 16px;"><p style="margin:0;font-family:var(--font-text);font-size:15px;line-height:20px;font-weight:500;color:var(--text-primary);">Day 3 — your trial ends tonight. You have logged X symptoms.</p><p style="margin:4px 0 0;font-family:var(--font-text);font-size:13.5px;line-height:20px;font-weight:400;color:var(--text-secondary);">Keep your data.</p></div></div><div><span class="nv-eyebrow" style="background:var(--luna-soft);color:var(--text-primary);">Subscribed</span><div style="margin-top:10px;background:var(--canvas);border-radius:18px;padding:14px 16px;"><p style="margin:0;font-family:var(--font-text);font-size:15px;line-height:20px;font-weight:500;color:var(--text-primary);">One insight is waiting for you today.</p><p style="margin:4px 0 0;font-family:var(--font-text);font-size:13.5px;line-height:20px;font-weight:400;color:var(--text-secondary);">Fires on the unlock schedule, never more than one a day.</p></div><div style="margin-top:10px;background:var(--canvas);border-radius:18px;padding:14px 16px;"><p style="margin:0;font-family:var(--font-text);font-size:15px;line-height:20px;font-weight:500;color:var(--text-primary);">Left thigh today.</p><p style="margin:4px 0 0;font-family:var(--font-text);font-size:13.5px;line-height:20px;font-weight:400;color:var(--text-secondary);">The HRT reminder fires on its own hour, not the log reminder's.</p></div></div></div>
+      </section>
+    </div>
+  </div>
+
+<div class="nv-grain"></div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1240,"height":1500}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>
