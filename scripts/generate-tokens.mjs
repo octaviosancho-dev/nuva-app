@@ -70,7 +70,9 @@ for (const group of tokens.type.groups) {
     if (s.letterSpacing) parts.push(`letterSpacing: ${px(s.letterSpacing)}`);
     if (italic) parts.push(`fontStyle: 'italic' as const`);
     if (s.name === 'numeral' || s.name === 'statNumber') {
-      parts.push(`fontVariant: ['tabular-nums'] as const`);
+      // Not `as const`: inside the outer `as const` that yields a readonly
+      // tuple, and React Native's TextStyle wants a mutable FontVariant[].
+      parts.push(`fontVariant: ['tabular-nums'] as TextStyle['fontVariant']`);
     }
     typeRows.push(`  ${s.name}: { ${parts.join(', ')} },`);
   }
@@ -113,6 +115,8 @@ const opacityRows = (tokens.opacity?.tokens ?? [])
 
 const out = `// Generated from design/tokens.json by scripts/generate-tokens.mjs.
 // Do not edit by hand — regenerate instead. Nuva tokens version ${tokens.version}.
+
+import type { TextStyle } from 'react-native';
 
 export const color = {
 ${colorBlock}

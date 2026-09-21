@@ -1,6 +1,8 @@
 // Generated from design/tokens.json by scripts/generate-tokens.mjs.
 // Do not edit by hand — regenerate instead. Nuva tokens version 3.
 
+import type { TextStyle } from 'react-native';
+
 export const color = {
   light: {
     canvas: '#faf5ee',
@@ -114,7 +116,7 @@ export const type = {
   displayLG: { fontFamily: 'Fraunces_600SemiBold', fontSize: 32, lineHeight: 35, letterSpacing: -0.7 },
   displayMD: { fontFamily: 'Fraunces_600SemiBold', fontSize: 26, lineHeight: 31, letterSpacing: -0.4 },
   displaySM: { fontFamily: 'Fraunces_600SemiBold', fontSize: 21, lineHeight: 27, letterSpacing: -0.2 },
-  statNumber: { fontFamily: 'Fraunces_600SemiBold', fontSize: 34, lineHeight: 36, letterSpacing: -0.6, fontVariant: ['tabular-nums'] as const },
+  statNumber: { fontFamily: 'Fraunces_600SemiBold', fontSize: 34, lineHeight: 36, letterSpacing: -0.6, fontVariant: ['tabular-nums'] as TextStyle['fontVariant'] },
   quote: { fontFamily: 'Fraunces_500Medium_Italic', fontSize: 19, lineHeight: 29, fontStyle: 'italic' as const },
   bodyLG: { fontFamily: 'DMSans_400Regular', fontSize: 16, lineHeight: 26 },
   body: { fontFamily: 'DMSans_400Regular', fontSize: 15, lineHeight: 23 },
@@ -125,7 +127,7 @@ export const type = {
   button: { fontFamily: 'DMSans_500Medium', fontSize: 16, lineHeight: 20, letterSpacing: -0.1 },
   buttonSM: { fontFamily: 'DMSans_500Medium', fontSize: 14, lineHeight: 18 },
   eyebrow: { fontFamily: 'DMSans_500Medium', fontSize: 11, lineHeight: 14, letterSpacing: 0.9 },
-  numeral: { fontFamily: 'DMSans_500Medium', fontSize: 15, lineHeight: 20, fontVariant: ['tabular-nums'] as const },
+  numeral: { fontFamily: 'DMSans_500Medium', fontSize: 15, lineHeight: 20, fontVariant: ['tabular-nums'] as TextStyle['fontVariant'] },
 } as const;
 
 export const space = {
