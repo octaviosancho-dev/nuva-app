@@ -33,7 +33,12 @@ export type QuestionKey = (typeof QUESTION_KEYS)[number];
  */
 export interface OnboardingAnswers {
   timeline?: number;
-  symptoms?: number[];
+  /**
+   * Symptom **slugs**, not indices. Her picks here seed the tracker's default
+   * ordering and eventually join `symptoms.slug` in Postgres, so an index would
+   * break the moment the twelve chips are reordered.
+   */
+  symptoms?: string[];
   periods?: number;
   doctor?: number;
   goal?: number;
