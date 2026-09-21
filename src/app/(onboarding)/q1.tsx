@@ -16,6 +16,7 @@ import {
 } from '@/components/ui';
 import { artColor, color, layout, screen, size, space, text } from '@/constants/tokens';
 import { accent, type } from '@/constants/typography';
+import { readAnswer, saveAnswer } from '@/lib/storage/onboarding';
 
 const timelineBranch = require<ImageSourcePropType>(
   '@/assets/illustrations/timeline-branch.jpg',
@@ -37,7 +38,12 @@ const options: { label: string; icon: LucideIcon }[] = [
  * takes `arch.shallow` — a deeper curve would clip the branch's detail.
  */
 export default function Q1TimelineScreen() {
-  const [selected, setSelected] = useState<number | null>(null);
+  const [selected, setSelected] = useState<number | null>(() => readAnswer('timeline') ?? null);
+
+  const choose = (index: number) => {
+    setSelected(index);
+    saveAnswer('timeline', index);
+  };
 
   useStatusBarStyle('light');
 
@@ -104,7 +110,7 @@ export default function Q1TimelineScreen() {
               icon={option.icon}
               index={index}
               selected={selected === index}
-              onPress={() => setSelected(index)}
+              onPress={() => choose(index)}
             />
           ))}
         </View>

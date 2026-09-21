@@ -30,6 +30,7 @@ import {
 } from '@/components/ui';
 import { artColor, color, layout, screen, size, space, text } from '@/constants/tokens';
 import { accent, type } from '@/constants/typography';
+import { readAnswer, saveAnswer } from '@/lib/storage/onboarding';
 
 const bodySignals = require<ImageSourcePropType>('@/assets/illustrations/body-signals.jpg');
 
@@ -66,14 +67,18 @@ const symptoms: { label: string; icon: LucideIcon }[] = [
  * same thing everywhere.
  */
 export default function Q2SymptomsScreen() {
-  const [picked, setPicked] = useState<readonly number[]>([]);
+  const [picked, setPicked] = useState<readonly number[]>(() => readAnswer('symptoms') ?? []);
 
   useStatusBarStyle('light');
 
   const toggle = (index: number) => {
-    setPicked((current) =>
-      current.includes(index) ? current.filter((i) => i !== index) : [...current, index],
-    );
+    // Computed outside the updater so the write happens once — React may call a
+    // state updater twice in development.
+    const next = picked.includes(index)
+      ? picked.filter((i) => i !== index)
+      : [...picked, index];
+    setPicked(next);
+    saveAnswer('symptoms', next);
   };
 
   const onBack = () => {

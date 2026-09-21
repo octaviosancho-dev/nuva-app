@@ -16,6 +16,7 @@ import {
 } from '@/components/ui';
 import { artColor, color, layout, screen, size, space, text } from '@/constants/tokens';
 import { accent, type } from '@/constants/typography';
+import { readAnswer, saveAnswer } from '@/lib/storage/onboarding';
 
 const dayArc = require<ImageSourcePropType>('@/assets/illustrations/day-arc.jpg');
 
@@ -48,7 +49,19 @@ const options: { label: string; icon: LucideIcon; reminderHour: number | null }[
  * Sage header, so everything inverts to ink on light, status bar included.
  */
 export default function Q6CheckInScreen() {
-  const [selected, setSelected] = useState<number | null>(null);
+  const [selected, setSelected] = useState<number | null>(
+    () => readAnswer('checkIn')?.index ?? null,
+  );
+
+  const choose = (index: number) => {
+    setSelected(index);
+    const option = options[index];
+    if (option) {
+      // The hour travels with the answer — it is what profiles.reminder_hour
+      // gets set to, and null there means the cron skips her permanently.
+      saveAnswer('checkIn', { index, reminderHour: option.reminderHour });
+    }
+  };
 
   useStatusBarStyle('dark');
 
@@ -117,7 +130,7 @@ export default function Q6CheckInScreen() {
               icon={option.icon}
               index={index}
               selected={selected === index}
-              onPress={() => setSelected(index)}
+              onPress={() => choose(index)}
             />
           ))}
         </View>

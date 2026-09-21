@@ -22,6 +22,7 @@ import {
 } from '@/components/ui';
 import { artColor, color, layout, screen, space, text } from '@/constants/tokens';
 import { accent, type } from '@/constants/typography';
+import { readAnswer, saveAnswer } from '@/lib/storage/onboarding';
 
 const cycleMoons = require<ImageSourcePropType>('@/assets/illustrations/cycle-moons.jpg');
 
@@ -61,7 +62,12 @@ const options: { label: string; subLabel: string; icon: LucideIcon }[] = [
  * headline, halftone and the status bar.
  */
 export default function Q3PeriodsScreen() {
-  const [selected, setSelected] = useState<number | null>(null);
+  const [selected, setSelected] = useState<number | null>(() => readAnswer('periods') ?? null);
+
+  const choose = (index: number) => {
+    setSelected(index);
+    saveAnswer('periods', index);
+  };
 
   useStatusBarStyle('dark');
 
@@ -136,7 +142,7 @@ export default function Q3PeriodsScreen() {
               icon={option.icon}
               index={index}
               selected={selected === index}
-              onPress={() => setSelected(index)}
+              onPress={() => choose(index)}
             />
           ))}
         </ScrollView>
