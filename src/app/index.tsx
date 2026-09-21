@@ -6,6 +6,7 @@ import Svg, { Defs, RadialGradient, Rect, Stop } from 'react-native-svg';
 import { SplashLockup } from '@/components/art/Logo';
 import { GrainOverlay } from '@/components/ui';
 import { color } from '@/constants/tokens';
+import { useTheme } from '@/lib/theme';
 
 const GLOW_SIZE = 340;
 
@@ -19,12 +20,13 @@ const GLOW_SIZE = 340;
  * `replace` rather than a screen we can navigate back to.
  */
 export default function SplashRoute() {
+  const { c } = useTheme();
   const onFinished = useCallback(() => {
     router.replace('/welcome');
   }, []);
 
   return (
-    <View style={styles.screen}>
+    <View style={[styles.screen, { backgroundColor: c.nightDeep }]}>
       <View style={styles.centre}>
         {/* The glow sits behind the mark, not around it — a radial that fades
             to nothing by 70%, so it reads as light rather than as a disc. */}
@@ -49,7 +51,6 @@ export default function SplashRoute() {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: color.light.nightDeep,
   },
   centre: {
     position: 'absolute',

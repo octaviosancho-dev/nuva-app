@@ -17,6 +17,7 @@ import { Vera } from '@/components/art/Vera';
 import { Button, EyebrowPill, GrainOverlay, ease } from '@/components/ui';
 import { MOTION } from '@/constants/nuva';
 import { color, space, type as typeStyles } from '@/constants/tokens';
+import { useTheme } from '@/lib/theme';
 
 const GLOW = 380;
 
@@ -39,6 +40,7 @@ const GLOW = 380;
  */
 export default function MagicMomentScreen() {
   const reduced = useReducedMotion();
+  const { c } = useTheme();
 
   const vera = useSharedValue(reduced ? 1 : 0);
   const veraScale = useSharedValue(reduced ? 1 : 0.94);
@@ -108,7 +110,7 @@ export default function MagicMomentScreen() {
   const ctaStyle = useAnimatedStyle(() => ({ opacity: cta.value }));
 
   return (
-    <View style={styles.screen}>
+    <View style={[styles.screen, { backgroundColor: c.nightDeep }]}>
       <Animated.View style={[styles.glow, glowStyle]} pointerEvents="none">
         <Svg width={GLOW} height={GLOW}>
           <Defs>
@@ -133,10 +135,10 @@ export default function MagicMomentScreen() {
         </Animated.View>
 
         <View style={styles.headline}>
-          <Animated.Text style={[typeStyles.displayXL, styles.display, l1Style]}>
+          <Animated.Text style={[typeStyles.displayXL, styles.display, { color: c.textOnNight }, l1Style]}>
             Your symptoms
           </Animated.Text>
-          <Animated.Text style={[typeStyles.displayXL, styles.display, l2Style]}>
+          <Animated.Text style={[typeStyles.displayXL, styles.display, { color: c.textOnNight }, l2Style]}>
             have a name.
           </Animated.Text>
         </View>
@@ -145,7 +147,7 @@ export default function MagicMomentScreen() {
           Early perimenopause.
         </Animated.Text>
 
-        <Animated.Text style={[typeStyles.bodyLG, styles.lead, bodyStyle]}>
+        <Animated.Text style={[typeStyles.bodyLG, styles.lead, { color: c.textOnNightMuted }, bodyStyle]}>
           Irregular cycles, anxiety spikes and brain fog, starting under a year ago. That pattern
           has a name, a mechanism, and from today it is trackable.
         </Animated.Text>
@@ -169,7 +171,6 @@ export default function MagicMomentScreen() {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: color.light.nightDeep,
   },
   glow: {
     position: 'absolute',
@@ -193,16 +194,13 @@ const styles = StyleSheet.create({
   headline: {
     marginTop: space.space4,
   },
-  display: {
-    color: color.light.textOnNight,
-  },
+  display: {},
   verdict: {
     marginTop: 14,
     color: color.light.ember,
   },
   lead: {
     marginTop: 18,
-    color: color.light.textOnNightMuted,
   },
   spacer: {
     flex: 1,

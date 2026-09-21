@@ -1,4 +1,5 @@
-import { Check } from 'lucide-react-native';
+import { Check, X } from 'lucide-react-native';
+import { router } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import Animated from 'react-native-reanimated';
@@ -12,7 +13,7 @@ import {
   useEntrance,
   usePressScale,
 } from '@/components/ui';
-import { radius, space, type as typeStyles } from '@/constants/tokens';
+import { opacity, radius, space, type as typeStyles } from '@/constants/tokens';
 import { useTheme } from '@/lib/theme';
 
 /** What the subscription actually buys, in the order the artboard lists it. */
@@ -65,11 +66,47 @@ export default function PaywallScreen() {
   const headline = useEntrance(2);
   const cta = useEntrance(7);
 
+  /**
+   * The artboard's close goes to the app, which does not exist yet. Back is the
+   * honest stand-in — it returns her to the magic moment rather than sitting
+   * there as a dead control. Once the tab shell lands this dismisses into it,
+   * and the paywall stays hard: dismissing is not subscribing.
+   */
+  const onClose = () => {
+    if (router.canGoBack()) {
+      router.back();
+    }
+  };
+
   return (
     <View style={[styles.screen, { backgroundColor: c.canvas }]}>
       <CrestHeader depth="hero" height={268} fill="nightDeep" bare>
+        {/*
+          Content is top-aligned. It used to sit under a flex spacer, which
+          bottom-aligned it and pushed the headline into the crest's bulge —
+          `CrestHeader` is explicit that the last baseline stays at least 20px
+          above `height`, and a 40/42 headline two lines deep has nowhere to go
+          once it starts at the bottom. Top-aligned, it ends at 244 against
+          shoulders at 268 — 24px of clearance, measured.
+        */}
         <View style={styles.headerInner}>
-          <View style={styles.spacer} />
+          <View style={styles.nav}>
+            {/* Mirrors the back control's box on the question screens, so the
+                header's internal rhythm is the same one she has seen six times. */}
+            <View style={styles.navSpacer} />
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel="Close"
+              onPress={onClose}
+              hitSlop={6}
+              style={({ pressed }) => [
+                styles.close,
+                pressed ? { opacity: opacity.pressed } : null,
+              ]}
+            >
+              <X size={18} strokeWidth={2} color={c.textOnNight} />
+            </Pressable>
+          </View>
 
           <Animated.View style={eyebrow}>
             <EyebrowPill label="3 days free" variant="ember" />
@@ -200,10 +237,22 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 58,
     paddingHorizontal: space.space6,
-    paddingBottom: space.space2,
   },
-  spacer: {
+  nav: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: space.space4,
+  },
+  navSpacer: {
     flex: 1,
+  },
+  close: {
+    width: 36,
+    height: 36,
+    borderRadius: radius.pill,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(253,248,241,0.16)',
   },
   flex: {
     flex: 1,
