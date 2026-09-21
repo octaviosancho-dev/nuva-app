@@ -41,3 +41,9 @@ example
 # generated native folders
 /ios
 /android
+
+# vendored third-party agent skills, installed from skills-lock.json.
+# The lockfile stays tracked — it is what makes the install reproducible —
+# the fetched content does not, the same way package-lock.json is versioned
+# and node_modules is not.
+.agents/
