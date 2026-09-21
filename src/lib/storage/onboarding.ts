@@ -1,19 +1,24 @@
-import { createMMKV } from 'react-native-mmkv';
+import { openStore, type StorageEngine } from './backend';
 
 /**
  * Onboarding answers, written to the device as they are given.
  *
- * PRODUCT_BRIEF.md §5.1: answers are persisted to MMKV as they are given, so a
- * killed app resumes where she left off, and synced to Supabase after auth.
+ * PRODUCT_BRIEF.md section 5.1: answers are persisted as they are given, so a
+ * killed app resumes where she left off, and are synced to Supabase after auth.
  *
- * MMKV rather than AsyncStorage because it is synchronous — a screen can read
- * its previous answer during the first render instead of flashing an unselected
- * state and then correcting itself.
+ * The store is synchronous, and that is the requirement driving the whole
+ * design: a screen reads its previous answer during the first render instead of
+ * flashing an unselected state and correcting itself a frame later.
  *
- * This is deliberately the only module that knows MMKV exists. When the Supabase
- * sync lands (milestone 4) it reads `readAll()` and clears with `reset()`.
+ * Which engine backs it is `backend.ts`'s problem — MMKV where its native
+ * module exists, a JSON file in Expo Go, both synchronous. This module stays
+ * the only one that knows storage exists at all. When the Supabase sync lands
+ * it reads `readAll()` and clears with `reset()`.
  */
-const store = createMMKV({ id: 'nuva.onboarding' });
+const { store, engine } = openStore('nuva.onboarding');
+
+/** Which backend is live. See `backend.ts`; worth quoting in a bug report. */
+export const storageEngine: StorageEngine = engine;
 
 /**
  * One key per question. These strings become `onboarding_answers.question_key`
@@ -47,7 +52,7 @@ export interface OnboardingAnswers {
 
 type AnswerFor<K extends QuestionKey> = NonNullable<OnboardingAnswers[K]>;
 
-/** Persist one answer. Called on every tap, which MMKV is fast enough to absorb. */
+/** Persist one answer. Called on every tap; both engines absorb that fine. */
 export function saveAnswer<K extends QuestionKey>(key: K, value: AnswerFor<K>): void {
   store.set(key, JSON.stringify(value));
 }
