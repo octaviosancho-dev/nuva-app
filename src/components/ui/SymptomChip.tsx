@@ -7,7 +7,7 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 
-import { MOTION, category, type CategorySlug } from '@/constants/nuva';
+import { MOTION, SYMPTOM_ICONS, category, type CategorySlug } from '@/constants/nuva';
 import { radius, space, type as typeStyles, type ColorToken } from '@/constants/tokens';
 import { useTheme } from '@/lib/theme';
 import { icon } from './icons';
@@ -56,7 +56,14 @@ export function SymptomChip({ symptom, selected = false, onToggle, style }: Symp
   const cat = category(symptom.category);
   const fill = c[(cat?.token ?? 'catPhysical') as ColorToken];
   const on = c[(cat?.on ?? 'onLuna') as ColorToken];
-  const Icon = icon(cat?.icon ?? 'circle-dashed');
+  /**
+   * The **symptom's** icon, not the category's. `SYMPTOM_ICONS` is the design
+   * system's stated source of truth here: she learns each glyph in Q2 and then
+   * uses it daily in the tracker, so one icon per category would hand her six
+   * symbols where the product promised thirty-four. The category icon is only a
+   * fallback for a slug the map does not know.
+   */
+  const Icon = icon(SYMPTOM_ICONS[symptom.slug] ?? cat?.icon ?? 'circle-dashed');
 
   const onPress = () => {
     if (!reduced && !selected) {

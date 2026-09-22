@@ -1,5 +1,6 @@
 import type { CategorySlug } from '@/constants/nuva';
 import { supabase } from './client';
+import { requireUserId } from './session';
 import type { Tables } from './database.types';
 
 export type SymptomRow = Tables<'symptoms'>;
@@ -21,6 +22,10 @@ export interface CatalogueSymptom {
  * `authenticated` — but it is not anybody's private data.
  */
 export async function fetchSymptoms(): Promise<CatalogueSymptom[]> {
+  // Reference data, but still behind RLS: the read policy is scoped to
+  // `authenticated`, so without a session this silently returns nothing.
+  await requireUserId();
+
   const { data, error } = await supabase
     .from('symptoms')
     .select('id, slug, label, category, icon, sort_order')

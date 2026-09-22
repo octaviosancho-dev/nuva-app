@@ -1,4 +1,5 @@
 import { supabase } from './client';
+import { requireUserId } from './session';
 
 export interface LogEntry {
   symptomId: string;
@@ -33,11 +34,7 @@ export function today(date = new Date()): string {
 export async function saveLog(entries: readonly LogEntry[], loggedOn = today()): Promise<void> {
   if (entries.length === 0) return;
 
-  const { data: auth } = await supabase.auth.getUser();
-  const userId = auth.user?.id;
-  if (!userId) {
-    throw new Error('No session. Nothing can be written without an identity — see supabase/README.md.');
-  }
+  const userId = await requireUserId();
 
   const { error } = await supabase.from('symptom_logs').upsert(
     entries.map((e) => ({
@@ -63,6 +60,8 @@ export interface LoggedSymptom {
 
 /** What she logged on a given day, for resuming an edit or showing it back. */
 export async function fetchLog(loggedOn = today()): Promise<LoggedSymptom[]> {
+  await requireUserId();
+
   const { data, error } = await supabase
     .from('symptom_logs')
     .select('symptom_id, severity, symptoms(slug, label)')

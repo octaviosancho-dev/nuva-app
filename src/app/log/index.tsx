@@ -1,7 +1,7 @@
 import { router } from 'expo-router';
 import { ArrowRight, X } from 'lucide-react-native';
 import { useEffect, useState } from 'react';
-import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import Animated from 'react-native-reanimated';
 
 import {
@@ -115,7 +115,17 @@ export default function LogSelectScreen() {
         ) : symptoms === null ? (
           <ActivityIndicator color={c.emberDeep} />
         ) : (
-          <View style={styles.grid}>
+          /*
+            The grid scrolls. All 34 chips wrap to 19 rows at 375px — about
+            1128px against the 448px the screen has for them — so without this
+            two thirds of the catalogue is drawn off-screen and unreachable.
+            The count and the CTA stay pinned below it, where her thumb is.
+          */
+          <ScrollView
+            style={styles.scroller}
+            contentContainerStyle={styles.grid}
+            showsVerticalScrollIndicator={false}
+          >
             {visible.map((symptom, index) => (
               <Chip
                 key={symptom.id}
@@ -124,10 +134,8 @@ export default function LogSelectScreen() {
                 selected={draft.some((e) => e.symptom.id === symptom.id)}
               />
             ))}
-          </View>
+          </ScrollView>
         )}
-
-        <View style={styles.spacer} />
 
         <Text style={[typeStyles.caption, styles.count, { color: c.textTertiary }]}>
           {draft.length} selected across all categories.
@@ -250,11 +258,11 @@ const styles = StyleSheet.create({
     gap: space.space3,
     alignContent: 'flex-start',
   },
-  spacer: {
+  scroller: {
     flex: 1,
-    minHeight: 14,
   },
   count: {
+    marginTop: 14,
     marginBottom: space.space3,
   },
 });

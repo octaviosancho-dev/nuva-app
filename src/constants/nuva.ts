@@ -62,6 +62,14 @@ export const SYMPTOM_ICONS: Record<string, string> = {
   fatigue: 'battery-low', 'weight-change': 'scale',
   'irregular-periods': 'calendar', flooding: 'droplet', spotting: 'circle-dashed',
   cramping: 'spiral',
+  // The 12 that bring the catalogue to the brief's 34.
+  'day-sweats': 'thermometer-sun', 'cold-flashes': 'thermometer-snowflake',
+  'temperature-swings': 'sun-snow',
+  panic: 'vibrate', 'loss-of-motivation': 'anchor',
+  concentration: 'focus', 'misplacing-things': 'search-x',
+  'restless-legs': 'footprints', 'vivid-dreams': 'cloud-moon',
+  bloating: 'expand', dizziness: 'orbit',
+  'breast-tenderness': 'hand-heart',
 };
 
 /* ------------------------------------------------------------------- motion

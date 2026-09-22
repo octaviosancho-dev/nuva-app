@@ -49,6 +49,26 @@ export async function ensureSession(): Promise<Session | null> {
   return created.session;
 }
 
+/**
+ * The user id, waiting for the session if it is not there yet.
+ *
+ * Every query needs this. Without a session PostgREST falls back to the `anon`
+ * role, and the policies are scoped to `authenticated` — so a read returns an
+ * empty list rather than an error, and a screen sits there looking like the
+ * catalogue is empty. That failure is silent and only happens on a genuinely
+ * fresh install, which is the worst possible audience for it.
+ *
+ * `ensureSession` is idempotent and resolves immediately once a session exists,
+ * so awaiting it on every call costs nothing after the first.
+ */
+export async function requireUserId(): Promise<string> {
+  const session = await ensureSession();
+  if (!session?.user.id) {
+    throw new Error('No session. Nothing can be read or written without an identity.');
+  }
+  return session.user.id;
+}
+
 export interface SessionState {
   session: Session | null;
   /** False until the first `getSession` has resolved. */
