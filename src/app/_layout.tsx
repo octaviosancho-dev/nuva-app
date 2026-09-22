@@ -11,6 +11,7 @@ import { useEffect } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
+import { ensureSession } from '@/lib/supabase/session';
 import { useTheme } from '@/lib/theme';
 
 /**
@@ -44,6 +45,16 @@ export default function RootLayout() {
       void SplashScreen.hideAsync();
     }
   }, [fontsLoaded, fontError]);
+
+  useEffect(() => {
+    /**
+     * Establish an identity once, for the whole app. Deliberately not awaited:
+     * onboarding runs entirely on local storage, so a slow or missing network
+     * must not hold up the first screen. The session arrives when it arrives,
+     * and the screens that need it read it through `useSession`.
+     */
+    void ensureSession();
+  }, []);
 
   if (!fontsLoaded && !fontError) {
     return null;

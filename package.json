@@ -5,6 +5,7 @@
   "dependencies": {
     "@expo-google-fonts/dm-sans": "^0.4.2",
     "@expo-google-fonts/fraunces": "^0.4.1",
+    "@supabase/supabase-js": "^2.116.0",
     "expo": "~57.0.23",
     "expo-constants": "~57.0.18",
     "expo-dev-client": "~57.0.19",
