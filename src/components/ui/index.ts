@@ -1,5 +1,11 @@
 export { Button, type ButtonProps, type ButtonVariant } from './Button';
 export { CrestHeader, type CrestHeaderProps } from './CrestHeader';
+export {
+  AddMedicationRow,
+  MedicationCard,
+  type AddMedicationRowProps,
+  type MedicationCardProps,
+} from './MedicationCard';
 export { OptionCard, type OptionCardProps } from './OptionCard';
 export { SeverityScale, type SeverityScaleProps } from './SeverityScale';
 export { ValidationCard, type ValidationCardProps } from './ValidationCard';

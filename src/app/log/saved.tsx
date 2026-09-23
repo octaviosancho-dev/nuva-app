@@ -104,7 +104,10 @@ export default function LogSavedScreen() {
         </Animated.View>
 
         <Animated.View style={[styles.cards, cards]}>
-          <StatCard value={stats?.daysTracked ?? 0} label="days tracked" />
+          <StatCard
+            value={stats?.daysTracked ?? 0}
+            label={stats?.daysTracked === 1 ? 'day tracked' : 'days tracked'}
+          />
           <StatCard value={stats?.symptomsToday ?? 0} label="logged today" />
         </Animated.View>
 
