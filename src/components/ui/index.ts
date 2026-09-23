@@ -5,6 +5,7 @@ export { SeverityScale, type SeverityScaleProps } from './SeverityScale';
 export { ValidationCard, type ValidationCardProps } from './ValidationCard';
 export { ProgressTrail, type ProgressTrailProps } from './ProgressTrail';
 export { SymptomChip, type Symptom, type SymptomChipProps } from './SymptomChip';
+export { TabBar, type TabBarProps, type TabKey } from './TabBar';
 export {
   BackButton,
   EyebrowPill,

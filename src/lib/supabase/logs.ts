@@ -78,3 +78,21 @@ export async function fetchLog(loggedOn = today()): Promise<LoggedSymptom[]> {
     severity: row.severity,
   }));
 }
+
+/**
+ * How many distinct days she has logged anything.
+ *
+ * Drives the "Day N" in the Today header. Counted client-side over her own rows
+ * rather than with a SQL aggregate, because RLS already scopes the query to her
+ * and the row count stays small for years — 365 dates a year is nothing to
+ * transfer, and it avoids a view or an RPC for one number.
+ */
+export async function fetchTrackedDays(): Promise<number> {
+  await requireUserId();
+
+  const { data, error } = await supabase.from('symptom_logs').select('logged_on');
+  if (error) {
+    throw new Error(`Could not count tracked days: ${error.message}`);
+  }
+  return new Set((data ?? []).map((r) => r.logged_on)).size;
+}

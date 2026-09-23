@@ -6,7 +6,7 @@ import Animated from 'react-native-reanimated';
 import { Vera } from '@/components/art/Vera';
 import { Button, CrestHeader, EyebrowPill, GrainOverlay, useEntrance } from '@/components/ui';
 import { radius, space, type as typeStyles } from '@/constants/tokens';
-import { elapsedMs, startDraft } from '@/lib/log/draft';
+import { elapsedMs } from '@/lib/log/draft';
 import { fetchLog, today } from '@/lib/supabase/logs';
 import { supabase } from '@/lib/supabase/client';
 import { useTheme } from '@/lib/theme';
@@ -112,13 +112,9 @@ export default function LogSavedScreen() {
 
         <Button
           label="Done"
-          onPress={() => {
-            // The tracker is the only thing built so far, so Done restarts it
-            // rather than landing nowhere. Once the tab shell exists this goes
-            // to Today.
-            startDraft();
-            router.replace('/log');
-          }}
+          // Back to Today, which refetches on focus and will show what she
+          // just logged rather than the empty state she left.
+          onPress={() => router.replace('/(app)/today')}
         />
       </View>
 

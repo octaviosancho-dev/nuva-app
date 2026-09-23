@@ -56,7 +56,8 @@ const PLANS = [
  * thought rather than as a promise followed by a bill.
  *
  * This is the shell. RevenueCat entitlements and the Superwall variant land in
- * milestone 5; the CTA currently has nowhere to go until auth exists.
+ * milestone 5 — until then the CTA opens the app unconditionally, which is what
+ * makes the flow walkable on a device.
  */
 export default function PaywallScreen() {
   const { c } = useTheme();
@@ -67,10 +68,10 @@ export default function PaywallScreen() {
   const cta = useEntrance(7);
 
   /**
-   * The artboard's close goes to the app, which does not exist yet. Back is the
-   * honest stand-in — it returns her to the magic moment rather than sitting
-   * there as a dead control. Once the tab shell lands this dismisses into it,
-   * and the paywall stays hard: dismissing is not subscribing.
+   * Back, not into the app. The artboard's close goes to Today because its flow
+   * puts Auth after this screen, but the brief calls for a hard paywall — so
+   * dismissing returns her to the magic moment. Dismissing is not subscribing,
+   * and that stays true when RevenueCat lands.
    */
   const onClose = () => {
     if (router.canGoBack()) {
@@ -142,7 +143,17 @@ export default function PaywallScreen() {
         <View style={styles.flex} />
 
         <Animated.View style={cta}>
-          <Button label="Start 3-day trial" onPress={() => undefined} />
+          {/*
+            Enters the app. RevenueCat gates this in milestone 5 — the trial
+            starts there and the entitlement is what actually opens the door.
+            Until then it is the only way to walk the whole flow on a device,
+            and the paywall stays hard in the sense that matters: nothing past
+            here works without the data layer behind it.
+          */}
+          <Button
+            label="Start 3-day trial"
+            onPress={() => router.replace('/(app)/today')}
+          />
         </Animated.View>
 
         <Text style={[typeStyles.caption, styles.note, { color: c.textTertiary }]}>
