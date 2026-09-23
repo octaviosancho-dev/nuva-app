@@ -132,3 +132,82 @@ export async function fetchCorrelation(): Promise<Correlation | null> {
     sampleDays: best.total,
   };
 }
+
+export interface TrendPoint {
+  date: string;
+  /** 1–4, or null on a day she did not log this symptom. */
+  severity: number | null;
+}
+
+export interface TrendSeries {
+  symptomId: string;
+  label: string;
+  category: string;
+  points: TrendPoint[];
+}
+
+/** The symptoms she has actually logged recently, for the chart's selector. */
+export async function fetchLoggedSymptoms(): Promise<
+  { id: string; label: string; category: string }[]
+> {
+  await requireUserId();
+
+  const since = new Date();
+  since.setDate(since.getDate() - WINDOW_DAYS);
+
+  const { data, error } = await supabase
+    .from('symptom_logs')
+    .select('symptom_id, symptoms(label, category)')
+    .gte('logged_on', iso(since));
+
+  if (error) throw new Error(`Could not load your symptoms: ${error.message}`);
+
+  const seen = new Map<string, { id: string; label: string; category: string }>();
+  for (const row of data ?? []) {
+    if (!row.symptoms || seen.has(row.symptom_id)) continue;
+    seen.set(row.symptom_id, {
+      id: row.symptom_id,
+      label: row.symptoms.label,
+      category: row.symptoms.category,
+    });
+  }
+  return [...seen.values()];
+}
+
+/**
+ * One symptom's severity across the last 30 days, one point per day.
+ *
+ * Days she did not log come back as null rather than as zero. Zero would draw
+ * the line to the floor and read as "no symptoms", which is a different claim
+ * from "no data" — and the one this product must never make on her behalf.
+ */
+export async function fetchTrend(
+  symptomId: string,
+  label: string,
+  category: string,
+): Promise<TrendSeries> {
+  await requireUserId();
+
+  const since = new Date();
+  since.setDate(since.getDate() - (WINDOW_DAYS - 1));
+
+  const { data, error } = await supabase
+    .from('symptom_logs')
+    .select('logged_on, severity')
+    .eq('symptom_id', symptomId)
+    .gte('logged_on', iso(since));
+
+  if (error) throw new Error(`Could not load the trend: ${error.message}`);
+
+  const bySeverity = new Map((data ?? []).map((r) => [r.logged_on, r.severity]));
+
+  const points: TrendPoint[] = [];
+  for (let i = 0; i < WINDOW_DAYS; i++) {
+    const d = new Date(since);
+    d.setDate(since.getDate() + i);
+    const date = iso(d);
+    points.push({ date, severity: bySeverity.get(date) ?? null });
+  }
+
+  return { symptomId, label, category, points };
+}

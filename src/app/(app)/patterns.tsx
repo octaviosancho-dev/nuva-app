@@ -1,5 +1,5 @@
-import { useFocusEffect } from 'expo-router';
-import { ChevronLeft, ChevronRight } from 'lucide-react-native';
+import { router, useFocusEffect } from 'expo-router';
+import { ChartLine, ChevronLeft, ChevronRight } from 'lucide-react-native';
 import { useCallback, useState } from 'react';
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import Animated from 'react-native-reanimated';
@@ -78,9 +78,23 @@ export default function PatternsScreen() {
     <View style={[styles.screen, { backgroundColor: c.canvas }]}>
       <CrestHeader depth="subtle" height={210} fill="night" bare>
         <View style={styles.headerInner}>
-          <Text style={[typeStyles.displayMD, styles.title, { color: c.textOnNight }]}>
-            Patterns
-          </Text>
+          <View style={styles.titleRow}>
+            <Text style={[typeStyles.displayMD, styles.title, { color: c.textOnNight }]}>
+              Patterns
+            </Text>
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel="Trends"
+              onPress={() => router.push('/trend')}
+              hitSlop={8}
+              style={({ pressed }) => [
+                styles.trendButton,
+                pressed ? { opacity: opacity.pressed } : null,
+              ]}
+            >
+              <ChartLine size={17} strokeWidth={2} color={c.textOnNight} />
+            </Pressable>
+          </View>
 
           <View style={styles.monthNav}>
             <Pressable
@@ -175,8 +189,22 @@ const styles = StyleSheet.create({
     paddingTop: 58,
     paddingHorizontal: space.space6,
   },
-  title: {
+  titleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: space.space3,
     marginBottom: 14,
+  },
+  title: {
+    flex: 1,
+  },
+  trendButton: {
+    width: 36,
+    height: 36,
+    borderRadius: radius.pill,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(253,248,241,0.16)',
   },
   monthNav: {
     flexDirection: 'row',
