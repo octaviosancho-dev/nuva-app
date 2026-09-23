@@ -1,4 +1,5 @@
 export { Button, type ButtonProps, type ButtonVariant } from './Button';
+export { CalendarHeat, type CalendarHeatProps, type DayCell } from './CalendarHeat';
 export { CrestHeader, type CrestHeaderProps } from './CrestHeader';
 export {
   AddMedicationRow,
