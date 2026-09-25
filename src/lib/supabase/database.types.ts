@@ -339,6 +339,7 @@ export type Database = {
           id: string
           is_fallback: boolean
           order_index: number
+          role: Database["public"]["Enums"]["word_template_role"]
           sentence_template: string
           symptom_slugs: string[]
         }
@@ -346,6 +347,7 @@ export type Database = {
           id?: string
           is_fallback?: boolean
           order_index: number
+          role?: Database["public"]["Enums"]["word_template_role"]
           sentence_template: string
           symptom_slugs: string[]
         }
@@ -353,6 +355,7 @@ export type Database = {
           id?: string
           is_fallback?: boolean
           order_index?: number
+          role?: Database["public"]["Enums"]["word_template_role"]
           sentence_template?: string
           symptom_slugs?: string[]
         }
@@ -368,6 +371,7 @@ export type Database = {
     Enums: {
       medication_type: "gel" | "patch" | "pill" | "spray" | "other"
       perimenopause_stage: "early" | "mid" | "late" | "post"
+      word_template_role: "opening" | "detail" | "ask"
       symptom_category:
         | "temperature"
         | "mood"
@@ -512,6 +516,7 @@ export const Constants = {
         "physical",
         "cycle",
       ],
+      word_template_role: ["opening", "detail", "ask"],
     },
   },
 } as const

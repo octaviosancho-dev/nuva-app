@@ -14,6 +14,7 @@ export { ProgressTrail, type ProgressTrailProps } from './ProgressTrail';
 export { SymptomChip, type Symptom, type SymptomChipProps } from './SymptomChip';
 export { TabBar, type TabBarProps, type TabKey } from './TabBar';
 export { TrendChart, type TrendChartProps } from './TrendChart';
+export { WordsCard, type WordsCardProps } from './WordsCard';
 export {
   BackButton,
   EyebrowPill,
