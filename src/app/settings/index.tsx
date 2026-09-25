@@ -1,6 +1,6 @@
 import Constants from 'expo-constants';
 import { router, useFocusEffect } from 'expo-router';
-import { FileDown, Trash2, UserRound } from 'lucide-react-native';
+import { FileDown, ShieldCheck, Trash2, UserRound } from 'lucide-react-native';
 import { useCallback, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import Animated from 'react-native-reanimated';
@@ -22,10 +22,9 @@ function versionLine(): string {
  *
  * Only what works today is here. The artboard also has Subscription (lands
  * with RevenueCat, milestone 5), the push and email toggles (notifications,
- * milestone 12) and the privacy policy (needs a hosted document). A toggle
- * that changes nothing, or a row that opens nothing, is a small lie — each
- * joins when it is true. Export everything is the PDF only for now; the
- * artboard's CSV is not built.
+ * milestone 12 server side). A toggle that changes nothing, or a row that
+ * opens nothing, is a small lie — each joins when it is true. Reminders live
+ * on their own screen, reached from You.
  *
  * Delete my account is built in full, because it is the one control here that
  * has to work from the first release: she must always be able to take
@@ -61,7 +60,8 @@ export default function SettingsScreen() {
 
   const accountRow = useEntrance(0, account !== null);
   const exportRow = useEntrance(1, account !== null);
-  const dataRow = useEntrance(2, account !== null);
+  const privacyRow = useEntrance(2, account !== null);
+  const dataRow = useEntrance(3, account !== null);
 
   return (
     <View style={[styles.screen, { backgroundColor: c.canvas }]}>
@@ -103,6 +103,14 @@ export default function SettingsScreen() {
             title="Export everything"
             subtitle="PDF, on this phone"
             onPress={() => router.push('/report')}
+          />
+        </Animated.View>
+        <Animated.View style={privacyRow}>
+          <ListRow
+            icon={ShieldCheck}
+            tint={c.sand}
+            title="Privacy policy"
+            onPress={() => router.push('/settings/privacy')}
           />
         </Animated.View>
         <Animated.View style={dataRow}>

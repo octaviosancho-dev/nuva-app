@@ -2,6 +2,8 @@ import * as Print from 'expo-print';
 import * as Sharing from 'expo-sharing';
 import { Platform } from 'react-native';
 
+import { track } from '@/lib/analytics';
+
 import { renderReportHtml } from './html';
 import { fetchMonthSummary, type Month } from './summary';
 
@@ -31,6 +33,7 @@ export async function previewReport(month: Month): Promise<void> {
     return;
   }
   await Print.printAsync({ html });
+  track('health_report_exported', { destination: 'print_preview' });
 }
 
 /**
@@ -44,9 +47,14 @@ export async function previewReport(month: Month): Promise<void> {
 export async function exportReport(month: Month): Promise<{ pages: number } | null> {
   const summary = await fetchMonthSummary(month);
   const html = renderReportHtml(summary);
+  track('health_report_generated', {
+    period_days: summary.daysElapsed,
+    symptom_count: summary.symptomCount,
+  });
 
   if (Platform.OS === 'web') {
     openOnWeb(html, true);
+    track('health_report_exported', { destination: 'web_print' });
     return null;
   }
 
@@ -57,6 +65,8 @@ export async function exportReport(month: Month): Promise<{ pages: number } | nu
       mimeType: 'application/pdf',
       dialogTitle: `Nuva health report, ${summary.label}`,
     });
+    // The share sheet does not say where it went, only that it opened.
+    track('health_report_exported', { destination: 'share_sheet' });
   }
   return { pages: numberOfPages };
 }

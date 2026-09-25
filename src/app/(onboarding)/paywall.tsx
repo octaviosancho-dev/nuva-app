@@ -1,6 +1,6 @@
 import { Check, X } from 'lucide-react-native';
 import { router } from 'expo-router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import Animated from 'react-native-reanimated';
 
@@ -14,6 +14,7 @@ import {
   usePressScale,
 } from '@/components/ui';
 import { opacity, radius, space, type as typeStyles } from '@/constants/tokens';
+import { track } from '@/lib/analytics';
 import { useTheme } from '@/lib/theme';
 
 /** What the subscription actually buys, in the order the artboard lists it. */
@@ -61,6 +62,11 @@ const PLANS = [
  */
 export default function PaywallScreen() {
   const { c } = useTheme();
+
+  useEffect(() => {
+    // One variant until Superwall runs the tests.
+    track('paywall_viewed', { variant: 'default' });
+  }, []);
   const [plan, setPlan] = useState(0);
 
   const eyebrow = useEntrance(0);

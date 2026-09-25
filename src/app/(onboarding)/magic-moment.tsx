@@ -17,6 +17,7 @@ import { Vera } from '@/components/art/Vera';
 import { Button, EyebrowPill, GrainOverlay, ease } from '@/components/ui';
 import { MOTION } from '@/constants/nuva';
 import { color, space, type as typeStyles } from '@/constants/tokens';
+import { track } from '@/lib/analytics';
 import { useTheme } from '@/lib/theme';
 
 const GLOW = 380;
@@ -50,6 +51,10 @@ export default function MagicMomentScreen() {
   const body = useSharedValue(0);
   const cta = useSharedValue(0);
   const glow = useSharedValue(reduced ? 0.08 : 0);
+
+  useEffect(() => {
+    track('magic_moment_viewed');
+  }, []);
 
   useEffect(() => {
     const { duration } = MOTION;

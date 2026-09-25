@@ -12,6 +12,7 @@ import {
 
 import { Button, CrestHeader, GrainOverlay } from '@/components/ui';
 import { opacity, radius, space, type as typeStyles } from '@/constants/tokens';
+import { track } from '@/lib/analytics';
 import { applyReminders } from '@/lib/notifications/reminders';
 import { createMedication, type MedicationType } from '@/lib/supabase/medications';
 import { useTheme } from '@/lib/theme';
@@ -78,6 +79,7 @@ export default function MedAddScreen() {
         rotationNotes: rotation,
         reminderHour: hour,
       });
+      track('medication_configured');
       // Its reminder hour starts firing now, not the next time she opens the app.
       void applyReminders({ requestPermission: true }).catch(() => undefined);
       leave();

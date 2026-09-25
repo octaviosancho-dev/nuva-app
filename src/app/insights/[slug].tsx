@@ -1,6 +1,6 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { Check } from 'lucide-react-native';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, ScrollView, StyleSheet, Text, View } from 'react-native';
 import Animated from 'react-native-reanimated';
 
@@ -13,6 +13,7 @@ import {
   useEntrance,
 } from '@/components/ui';
 import { space, type as typeStyles } from '@/constants/tokens';
+import { track } from '@/lib/analytics';
 import { applyReminders } from '@/lib/notifications/reminders';
 import { fetchInsights, markRead, type TodayInsight } from '@/lib/supabase/insights';
 import { useTheme } from '@/lib/theme';
@@ -45,6 +46,7 @@ export default function InsightOpenScreen() {
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [titleHeight, setTitleHeight] = useState(0);
+  const openedAt = useRef(Date.now());
 
   useEffect(() => {
     let cancelled = false;
@@ -52,6 +54,8 @@ export default function InsightOpenScreen() {
       .then((s) => {
         if (cancelled) return;
         if (s.today?.slug === slug) {
+          openedAt.current = Date.now();
+          track('insight_opened', { insight_slug: slug });
           setOpened({ ...s.today, total: s.total });
           return;
         }
@@ -84,6 +88,7 @@ export default function InsightOpenScreen() {
     setSaving(true);
     try {
       await markRead(id);
+      track('insight_completed', { insight_slug: slug, dwell_ms: Date.now() - openedAt.current });
       // Tonight's notification no longer needs to mention an insight she has read.
       void applyReminders().catch(() => undefined);
       leave();

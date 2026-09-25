@@ -13,6 +13,8 @@ import {
   useEntrance,
 } from '@/components/ui';
 import { color, space, type as typeStyles, type ColorToken } from '@/constants/tokens';
+import { track } from '@/lib/analytics';
+import { QUESTION_KEYS, readAnswer } from '@/lib/storage/onboarding';
 import { useTheme } from '@/lib/theme';
 
 export interface QuestionScreenProps {
@@ -63,6 +65,13 @@ export function QuestionScreen({
   onContinue,
 }: QuestionScreenProps) {
   const { c } = useTheme();
+
+  /** Steps 1–6 map onto QUESTION_KEYS, so the event needs nothing from the screens. */
+  const answered = () => {
+    const key = QUESTION_KEYS[step - 1];
+    if (key) track('onboarding_question_answered', { question_key: key, answer: readAnswer(key) });
+    onContinue();
+  };
 
   /**
    * Header content colour follows the **fill**, not the theme.
@@ -149,7 +158,7 @@ export function QuestionScreen({
         ) : null}
 
         <Animated.View style={cta}>
-          <Button label={ctaLabel} disabled={ctaDisabled} onPress={onContinue} />
+          <Button label={ctaLabel} disabled={ctaDisabled} onPress={answered} />
         </Animated.View>
       </View>
 

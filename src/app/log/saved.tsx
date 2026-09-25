@@ -8,6 +8,7 @@ import { Vera } from '@/components/art/Vera';
 import { Button, CrestHeader, EyebrowPill, GrainOverlay, useEntrance } from '@/components/ui';
 import { radius, space, type as typeStyles } from '@/constants/tokens';
 import { elapsedMs } from '@/lib/log/draft';
+import { track } from '@/lib/analytics';
 import { applyReminders } from '@/lib/notifications/reminders';
 import { fetchInsights } from '@/lib/supabase/insights';
 import { fetchLog, today } from '@/lib/supabase/logs';
@@ -45,10 +46,10 @@ export default function LogSavedScreen() {
   const [stats, setStats] = useState<Stats | null>(null);
   /** Today's insight, if she hasn't read it — picked from the log she just saved. */
   const [insightSlug, setInsightSlug] = useState<string | null>(null);
-  const [seconds] = useState(() => {
-    const ms = elapsedMs();
-    return ms === null ? null : Math.max(1, Math.round(ms / 1000));
-  });
+  // Read once, as the screen opens: the log was saved a moment ago, and the
+  // queries below must not add their own time to the metric.
+  const [durationMs] = useState(() => elapsedMs());
+  const seconds = durationMs === null ? null : Math.max(1, Math.round(durationMs / 1000));
 
   const eyebrow = useEntrance(0);
   const headline = useEntrance(1);
@@ -67,6 +68,9 @@ export default function LogSavedScreen() {
       if (cancelled) return;
       const unique = new Set((days ?? []).map((r) => r.logged_on));
       setStats({ daysTracked: unique.size, symptomsToday: log.length });
+      // The product's health metric. Null when the tracker was opened without
+      // a draft clock (a deep link), rather than a made-up number.
+      track('symptom_log_completed', { symptom_count: log.length, duration_ms: durationMs });
     })().catch(() => {
       // The log is already saved; a failed count is not worth an error state.
       if (!cancelled) setStats({ daysTracked: 1, symptomsToday: 0 });

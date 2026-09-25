@@ -6,6 +6,7 @@ import Animated from 'react-native-reanimated';
 
 import { CalendarHeat, CrestHeader, GrainOverlay, useEntrance } from '@/components/ui';
 import { opacity, radius, space, type as typeStyles } from '@/constants/tokens';
+import { track } from '@/lib/analytics';
 import { today } from '@/lib/supabase/logs';
 import {
   fetchCorrelation,
@@ -62,6 +63,11 @@ export default function PatternsScreen() {
   }, [month]);
 
   useFocusEffect(load);
+  useFocusEffect(
+    useCallback(() => {
+      track('pattern_view_opened');
+    }, []),
+  );
 
   const calendar = useEntrance(0);
   const coOccurs = useEntrance(2);

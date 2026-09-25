@@ -14,6 +14,7 @@ import {
   useEntrance,
 } from '@/components/ui';
 import { space, type as typeStyles } from '@/constants/tokens';
+import { track } from '@/lib/analytics';
 import { useTheme } from '@/lib/theme';
 
 /**
@@ -29,6 +30,11 @@ import { useTheme } from '@/lib/theme';
  */
 export default function WelcomeScreen() {
   const { c } = useTheme();
+
+  const start = () => {
+    track('onboarding_started');
+    router.push('/q1');
+  };
 
   const logo = useEntrance(0);
   const vera = useEntrance(2);
@@ -72,7 +78,7 @@ export default function WelcomeScreen() {
         <View style={styles.spacer} />
 
         <Animated.View style={cta}>
-          <Button label="Start" icon={ArrowRight} onPress={() => router.push('/q1')} />
+          <Button label="Start" icon={ArrowRight} onPress={start} />
         </Animated.View>
 
         <View style={styles.accountRow}>
@@ -84,7 +90,7 @@ export default function WelcomeScreen() {
           <TextLink
             label="I already have an account"
             color={c.textPrimary}
-            onPress={() => router.push('/q1')}
+            onPress={start}
           />
         </View>
       </View>

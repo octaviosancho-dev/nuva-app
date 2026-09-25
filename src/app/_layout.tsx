@@ -13,6 +13,7 @@ import { Platform } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
+import { track } from '@/lib/analytics';
 import { startDraft } from '@/lib/log/draft';
 import type { ReminderUrl } from '@/lib/notifications/reminders';
 import { ensureSession } from '@/lib/supabase/session';
@@ -65,6 +66,7 @@ function openFromNotification(response: Notifications.NotificationResponse | nul
       router.push('/insights');
       break;
     case '/meds':
+      track('medication_reminder_tapped');
       router.push('/meds');
       break;
     case '/report':
