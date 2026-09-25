@@ -1,5 +1,5 @@
 import { router, useFocusEffect } from 'expo-router';
-import { Pill, Settings } from 'lucide-react-native';
+import { FileText, Pill, Settings } from 'lucide-react-native';
 import { useCallback, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import Animated from 'react-native-reanimated';
@@ -25,6 +25,16 @@ function formatSince(iso: string): string {
 
 const pad = (n: number) => String(n).padStart(2, '0');
 
+/** "September summary, ready 1 October" — the month in progress and when it closes. */
+function reportLine(now = new Date()): string {
+  const month = now.toLocaleDateString('en-GB', { month: 'long' });
+  const ready = new Date(now.getFullYear(), now.getMonth() + 1, 1).toLocaleDateString('en-GB', {
+    day: 'numeric',
+    month: 'long',
+  });
+  return `${month} summary, ready ${ready}`;
+}
+
 /**
  * You, from `design/screens/You.dc.html`.
  *
@@ -38,9 +48,8 @@ const pad = (n: number) => String(n).padStart(2, '0');
  *   stage ("Early perimenopause"). She has no name on file until she signs in
  *   with Apple or Google, and the app does not diagnose a stage, so the header
  *   says "You" and "tracking since" — nothing it would have to make up.
- * - Health report and Reminders are rows on the artboard. Their screens are
- *   not built yet, and a row that leads nowhere is worse than no row, so they
- *   join this list when their screens exist.
+ * - Reminders is a row on the artboard. Its screen waits for notifications
+ *   (milestone 12), and a row that leads nowhere is worse than no row.
  */
 export default function YouScreen() {
   const { c } = useTheme();
@@ -66,7 +75,8 @@ export default function YouScreen() {
 
   const stats = useEntrance(0, summary !== null);
   const meds = useEntrance(1, summary !== null);
-  const settings = useEntrance(2, summary !== null);
+  const report = useEntrance(2, summary !== null);
+  const settings = useEntrance(3, summary !== null);
 
   const medsLine = !summary
     ? ' '
@@ -109,6 +119,16 @@ export default function YouScreen() {
             title="HRT and medication"
             subtitle={medsLine}
             onPress={() => router.push('/meds')}
+          />
+        </Animated.View>
+
+        <Animated.View style={report}>
+          <ListRow
+            icon={FileText}
+            tint={c.sand}
+            title="Health report"
+            subtitle={reportLine()}
+            onPress={() => router.push('/report')}
           />
         </Animated.View>
 

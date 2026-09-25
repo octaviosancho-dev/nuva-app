@@ -1,6 +1,6 @@
 import Constants from 'expo-constants';
 import { router, useFocusEffect } from 'expo-router';
-import { Trash2, UserRound } from 'lucide-react-native';
+import { FileDown, Trash2, UserRound } from 'lucide-react-native';
 import { useCallback, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import Animated from 'react-native-reanimated';
@@ -22,9 +22,10 @@ function versionLine(): string {
  *
  * Only what works today is here. The artboard also has Subscription (lands
  * with RevenueCat, milestone 5), the push and email toggles (notifications,
- * milestone 12), Export everything (the Health Report, milestone 11) and the
- * privacy policy (needs a hosted document). A toggle that changes nothing, or
- * a row that opens nothing, is a small lie — each joins when it is true.
+ * milestone 12) and the privacy policy (needs a hosted document). A toggle
+ * that changes nothing, or a row that opens nothing, is a small lie — each
+ * joins when it is true. Export everything is the PDF only for now; the
+ * artboard's CSV is not built.
  *
  * Delete my account is built in full, because it is the one control here that
  * has to work from the first release: she must always be able to take
@@ -59,7 +60,8 @@ export default function SettingsScreen() {
   };
 
   const accountRow = useEntrance(0, account !== null);
-  const dataRow = useEntrance(1, account !== null);
+  const exportRow = useEntrance(1, account !== null);
+  const dataRow = useEntrance(2, account !== null);
 
   return (
     <View style={[styles.screen, { backgroundColor: c.canvas }]}>
@@ -94,6 +96,15 @@ export default function SettingsScreen() {
         <Text style={[typeStyles.eyebrow, styles.section, { color: c.textTertiary }]}>
           YOUR DATA
         </Text>
+        <Animated.View style={exportRow}>
+          <ListRow
+            icon={FileDown}
+            tint={c.lunaSoft}
+            title="Export everything"
+            subtitle="PDF, on this phone"
+            onPress={() => router.push('/report')}
+          />
+        </Animated.View>
         <Animated.View style={dataRow}>
           <ListRow
             icon={Trash2}

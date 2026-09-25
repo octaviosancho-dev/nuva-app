@@ -67,6 +67,9 @@ export function Button({
         onPress={onPress}
         onPressIn={press.onPressIn}
         onPressOut={press.onPressOut}
+        // Compact is 42px tall on the artboards; the slop takes the touch
+        // target past the 44px minimum without changing what she sees.
+        hitSlop={compact ? { top: 2, bottom: 2, left: 0, right: 0 } : undefined}
         style={[
           styles.base,
           compact ? styles.compact : styles.full,
