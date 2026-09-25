@@ -1,4 +1,5 @@
 import { router } from 'expo-router';
+import { ArrowRight } from 'lucide-react-native';
 import { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import Animated from 'react-native-reanimated';
@@ -7,6 +8,7 @@ import { Vera } from '@/components/art/Vera';
 import { Button, CrestHeader, EyebrowPill, GrainOverlay, useEntrance } from '@/components/ui';
 import { radius, space, type as typeStyles } from '@/constants/tokens';
 import { elapsedMs } from '@/lib/log/draft';
+import { fetchInsights } from '@/lib/supabase/insights';
 import { fetchLog, today } from '@/lib/supabase/logs';
 import { supabase } from '@/lib/supabase/client';
 import { useTheme } from '@/lib/theme';
@@ -40,6 +42,8 @@ interface Stats {
 export default function LogSavedScreen() {
   const { c } = useTheme();
   const [stats, setStats] = useState<Stats | null>(null);
+  /** Today's insight, if she hasn't read it — picked from the log she just saved. */
+  const [insightSlug, setInsightSlug] = useState<string | null>(null);
   const [seconds] = useState(() => {
     const ms = elapsedMs();
     return ms === null ? null : Math.max(1, Math.round(ms / 1000));
@@ -67,10 +71,27 @@ export default function LogSavedScreen() {
       if (!cancelled) setStats({ daysTracked: 1, symptomsToday: 0 });
     });
 
+    // Fetched after the save, so the weighting already counts today's log:
+    // the insight she is offered is about what she just told the app.
+    void fetchInsights()
+      .then((s) => {
+        if (!cancelled && s.today && !s.today.read) setInsightSlug(s.today.slug);
+      })
+      .catch(() => {
+        // No insight offer is fine; "Done" still takes her home.
+      });
+
     return () => {
       cancelled = true;
     };
   }, []);
+
+  const readInsight = (slug: string) => {
+    // Home first, then the insight, so its back button lands on Today rather
+    // than on the tracker she has already finished.
+    router.dismissTo('/(app)/today');
+    router.push({ pathname: '/insights/[slug]', params: { slug } });
+  };
 
   const remaining = stats ? Math.max(0, CALENDAR_THRESHOLD - stats.daysTracked) : null;
 
@@ -113,12 +134,20 @@ export default function LogSavedScreen() {
 
         <View style={styles.spacer} />
 
-        <Button
-          label="Done"
-          // Back to Today, which refetches on focus and will show what she
-          // just logged rather than the empty state she left.
-          onPress={() => router.replace('/(app)/today')}
-        />
+        {insightSlug ? (
+          <Button
+            label="Read today's insight"
+            icon={ArrowRight}
+            onPress={() => readInsight(insightSlug)}
+          />
+        ) : (
+          <Button
+            label="Done"
+            // Back to Today, which refetches on focus and will show what she
+            // just logged rather than the empty state she left.
+            onPress={() => router.replace('/(app)/today')}
+          />
+        )}
       </View>
 
       <GrainOverlay />

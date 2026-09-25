@@ -7,6 +7,7 @@ export {
   type AddMedicationRowProps,
   type MedicationCardProps,
 } from './MedicationCard';
+export { InsightCard, type InsightCardProps } from './InsightCard';
 export { OptionCard, type OptionCardProps } from './OptionCard';
 export { SeverityScale, type SeverityScaleProps } from './SeverityScale';
 export { ValidationCard, type ValidationCardProps } from './ValidationCard';

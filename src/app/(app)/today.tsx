@@ -5,9 +5,17 @@ import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import Animated from 'react-native-reanimated';
 
 import { VeraAvatar } from '@/components/art/Vera';
-import { Button, CrestHeader, GrainOverlay, useEntrance } from '@/components/ui';
+import {
+  Button,
+  CrestHeader,
+  GrainOverlay,
+  InsightCard,
+  TextLink,
+  useEntrance,
+} from '@/components/ui';
 import { opacity, radius, space, type as typeStyles } from '@/constants/tokens';
 import { startDraft } from '@/lib/log/draft';
+import { fetchInsights, type TodayInsight } from '@/lib/supabase/insights';
 import { fetchLog, fetchTrackedDays, type LoggedSymptom } from '@/lib/supabase/logs';
 import { useTheme } from '@/lib/theme';
 
@@ -19,19 +27,19 @@ function formatToday(date = new Date()): string {
 interface TodayState {
   logged: LoggedSymptom[];
   trackedDays: number;
+  insight: TodayInsight | null;
 }
 
 /**
  * The app's home, from `design/screens/Today.dc.html` and its empty twin.
  *
  * The artboard shows four cards: the log, the daily insight, the medication
- * reminder and Find Your Words. Only the log is built — the other three read
- * from content that does not exist yet (90 insights, ~30 sentence templates,
- * the medication CRUD), and a card that promises something the app cannot
- * deliver is worse than no card. They arrive with their milestones.
+ * reminder and Find Your Words. The log and the insight are built; the other
+ * two follow.
  *
- * So this is `TodayEmpty` until she logs, and the log summary after. Both are
- * real states with real copy, not scaffolding.
+ * The log card is `TodayEmpty` until she logs, and the log summary after.
+ * The insight card is weighted to her last 7 days, so after a log it can
+ * change to follow what she just recorded.
  */
 export default function TodayScreen() {
   const { c, shadow } = useTheme();
@@ -43,12 +51,18 @@ export default function TodayScreen() {
   useFocusEffect(
     useCallback(() => {
       let cancelled = false;
-      void Promise.all([fetchLog(), fetchTrackedDays()])
-        .then(([logged, trackedDays]) => {
-          if (!cancelled) setState({ logged, trackedDays });
+      void Promise.all([
+        fetchLog(),
+        fetchTrackedDays(),
+        // The insight is a second card, not the page: if it fails, the log
+        // card still shows rather than the whole screen erroring.
+        fetchInsights().catch(() => null),
+      ])
+        .then(([logged, trackedDays, insights]) => {
+          if (!cancelled) setState({ logged, trackedDays, insight: insights?.today ?? null });
         })
         .catch(() => {
-          if (!cancelled) setState({ logged: [], trackedDays: 0 });
+          if (!cancelled) setState({ logged: [], trackedDays: 0, insight: null });
         });
       return () => {
         cancelled = true;
@@ -57,6 +71,7 @@ export default function TodayScreen() {
   );
 
   const card = useEntrance(1);
+  const insightCard = useEntrance(2, state?.insight != null);
   const loggedToday = (state?.logged.length ?? 0) > 0;
   // Before her first log, today is day one rather than day zero — which is what
   // the empty copy says out loud.
@@ -121,7 +136,9 @@ export default function TodayScreen() {
           <Text style={[typeStyles.bodySM, styles.cardBody, { color: c.textSecondary }]}>
             {loggedToday
               ? state?.logged.map((l) => l.label).join(' · ')
-              : 'The first pattern needs about a week. Today is day one of that week.'}
+              : (state?.trackedDays ?? 0) === 0
+                ? 'The first pattern needs about a week. Today is day one of that week.'
+                : 'It takes about 60 seconds. A day left blank stays blank — it never counts against you.'}
           </Text>
 
           <View style={styles.cta}>
@@ -133,6 +150,29 @@ export default function TodayScreen() {
             />
           </View>
         </Animated.View>
+
+        {state?.insight ? (
+          <Animated.View style={[styles.insight, insightCard]}>
+            <InsightCard
+              state="today"
+              title={state.insight.title}
+              categoryLabel={state.insight.categoryLabel}
+              readingSeconds={state.insight.readingSeconds}
+              reason={state.insight.reason}
+              readToday={state.insight.read}
+              onOpen={() =>
+                state.insight &&
+                router.push({ pathname: '/insights/[slug]', params: { slug: state.insight.slug } })
+              }
+            />
+            <TextLink
+              label="All insights"
+              size="caption"
+              onPress={() => router.push('/insights')}
+              style={styles.allLink}
+            />
+          </Animated.View>
+        ) : null}
       </ScrollView>
 
       <GrainOverlay />
@@ -184,6 +224,12 @@ const styles = StyleSheet.create({
   },
   cardBody: {
     marginTop: space.space2,
+  },
+  insight: {
+    gap: space.space3,
+  },
+  allLink: {
+    alignSelf: 'flex-start',
   },
   cta: {
     marginTop: 14,
