@@ -1,11 +1,11 @@
 import { router, useFocusEffect } from 'expo-router';
-import { ChevronRight, Pill, type LucideIcon } from 'lucide-react-native';
+import { Pill, Settings } from 'lucide-react-native';
 import { useCallback, useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import Animated from 'react-native-reanimated';
 
 import { VeraAvatar } from '@/components/art/Vera';
-import { CrestHeader, GrainOverlay, useEntrance, usePressScale } from '@/components/ui';
+import { CrestHeader, GrainOverlay, ListRow, useEntrance } from '@/components/ui';
 import { radius, space, type as typeStyles } from '@/constants/tokens';
 import { fetchYouSummary, type YouSummary } from '@/lib/supabase/you';
 import { useTheme } from '@/lib/theme';
@@ -38,9 +38,9 @@ const pad = (n: number) => String(n).padStart(2, '0');
  *   stage ("Early perimenopause"). She has no name on file until she signs in
  *   with Apple or Google, and the app does not diagnose a stage, so the header
  *   says "You" and "tracking since" — nothing it would have to make up.
- * - Health report, Reminders and Settings are rows on the artboard. Their
- *   screens are not built yet, and a row that leads nowhere is worse than no
- *   row, so they join this list when their screens exist.
+ * - Health report and Reminders are rows on the artboard. Their screens are
+ *   not built yet, and a row that leads nowhere is worse than no row, so they
+ *   join this list when their screens exist.
  */
 export default function YouScreen() {
   const { c } = useTheme();
@@ -66,6 +66,7 @@ export default function YouScreen() {
 
   const stats = useEntrance(0, summary !== null);
   const meds = useEntrance(1, summary !== null);
+  const settings = useEntrance(2, summary !== null);
 
   const medsLine = !summary
     ? ' '
@@ -102,12 +103,22 @@ export default function YouScreen() {
         </Animated.View>
 
         <Animated.View style={meds}>
-          <Row
+          <ListRow
             icon={Pill}
             tint={c.lunaSoft}
             title="HRT and medication"
             subtitle={medsLine}
             onPress={() => router.push('/meds')}
+          />
+        </Animated.View>
+
+        <Animated.View style={settings}>
+          <ListRow
+            icon={Settings}
+            tint={c.claySoft}
+            title="Settings"
+            subtitle="Account and your data"
+            onPress={() => router.push('/settings')}
           />
         </Animated.View>
       </ScrollView>
@@ -125,45 +136,6 @@ function StatTile({ value, label }: { value: number | undefined; label: string }
       <Text style={[typeStyles.statNumber, { color: c.lunaDeep }]}>{value ?? '–'}</Text>
       <Text style={[typeStyles.bodySM, styles.tileLabel, { color: c.textSecondary }]}>{label}</Text>
     </View>
-  );
-}
-
-function Row({
-  icon: Icon,
-  tint,
-  title,
-  subtitle,
-  onPress,
-}: {
-  icon: LucideIcon;
-  tint: string;
-  title: string;
-  subtitle: string;
-  onPress: () => void;
-}) {
-  const { c, shadow } = useTheme();
-  const press = usePressScale(0.98);
-  return (
-    <Animated.View style={press.style}>
-      <Pressable
-        accessibilityRole="button"
-        accessibilityLabel={title}
-        accessibilityHint={subtitle}
-        onPress={onPress}
-        onPressIn={press.onPressIn}
-        onPressOut={press.onPressOut}
-        style={[styles.row, { backgroundColor: c.surface }, shadow.xs]}
-      >
-        <View style={[styles.rowIcon, { backgroundColor: tint }]}>
-          <Icon size={20} strokeWidth={2} color={c.textPrimary} />
-        </View>
-        <View style={styles.rowText}>
-          <Text style={[typeStyles.labelLG, { color: c.textPrimary }]}>{title}</Text>
-          <Text style={[typeStyles.bodySM, styles.rowSub, { color: c.textSecondary }]}>{subtitle}</Text>
-        </View>
-        <ChevronRight size={20} strokeWidth={2} color={c.textTertiary} />
-      </Pressable>
-    </Animated.View>
   );
 }
 
@@ -201,28 +173,6 @@ const styles = StyleSheet.create({
     padding: space.space4,
   },
   tileLabel: {
-    marginTop: 2,
-  },
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 14,
-    borderRadius: radius.md,
-    paddingVertical: 14,
-    paddingHorizontal: space.space4,
-  },
-  rowIcon: {
-    width: 42,
-    height: 42,
-    borderRadius: radius.sm,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  rowText: {
-    flex: 1,
-    minWidth: 0,
-  },
-  rowSub: {
     marginTop: 2,
   },
 });
