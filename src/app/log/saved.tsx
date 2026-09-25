@@ -8,6 +8,7 @@ import { Vera } from '@/components/art/Vera';
 import { Button, CrestHeader, EyebrowPill, GrainOverlay, useEntrance } from '@/components/ui';
 import { radius, space, type as typeStyles } from '@/constants/tokens';
 import { elapsedMs } from '@/lib/log/draft';
+import { applyReminders } from '@/lib/notifications/reminders';
 import { fetchInsights } from '@/lib/supabase/insights';
 import { fetchLog, today } from '@/lib/supabase/logs';
 import { supabase } from '@/lib/supabase/client';
@@ -70,6 +71,9 @@ export default function LogSavedScreen() {
       // The log is already saved; a failed count is not worth an error state.
       if (!cancelled) setStats({ daysTracked: 1, symptomsToday: 0 });
     });
+
+    // She has logged today, so today's check-in reminder is dropped.
+    void applyReminders().catch(() => undefined);
 
     // Fetched after the save, so the weighting already counts today's log:
     // the insight she is offered is about what she just told the app.

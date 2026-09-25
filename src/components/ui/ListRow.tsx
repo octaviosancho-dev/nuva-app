@@ -1,4 +1,5 @@
 import { ChevronRight, type LucideIcon } from 'lucide-react-native';
+import type { ReactNode } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import Animated from 'react-native-reanimated';
 
@@ -14,6 +15,8 @@ export interface ListRowProps {
   subtitle?: string;
   /** Without it the row is a statement, not a control: no chevron, no press. */
   onPress?: () => void;
+  /** A control at the end instead of the chevron — a Toggle. The row itself is then not pressable. */
+  trailing?: ReactNode;
 }
 
 /**
@@ -21,7 +24,7 @@ export interface ListRowProps {
  * line under it, and a chevron when it goes somewhere. A row that only reports
  * something has no chevron, so nothing on screen looks tappable and isn't.
  */
-export function ListRow({ icon: Icon, tint, title, subtitle, onPress }: ListRowProps) {
+export function ListRow({ icon: Icon, tint, title, subtitle, onPress, trailing }: ListRowProps) {
   const { c, shadow } = useTheme();
   const press = usePressScale(0.98);
 
@@ -38,14 +41,15 @@ export function ListRow({ icon: Icon, tint, title, subtitle, onPress }: ListRowP
           <Text style={[typeStyles.bodySM, styles.sub, { color: c.textSecondary }]}>{subtitle}</Text>
         ) : null}
       </View>
-      {onPress ? <ChevronRight size={20} strokeWidth={2} color={c.textTertiary} /> : null}
+      {trailing ?? (onPress ? <ChevronRight size={20} strokeWidth={2} color={c.textTertiary} /> : null)}
     </>
   );
 
-  if (!onPress) {
+  if (!onPress || trailing) {
     return (
       <View
-        accessible
+        // With a control inside, the row must not swallow it as one element.
+        accessible={!trailing}
         accessibilityLabel={subtitle ? `${title}. ${subtitle}` : title}
         style={[styles.row, { backgroundColor: c.surface }, shadow.xs]}
       >

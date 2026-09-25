@@ -13,6 +13,7 @@ import {
   useEntrance,
 } from '@/components/ui';
 import { space, type as typeStyles } from '@/constants/tokens';
+import { applyReminders } from '@/lib/notifications/reminders';
 import { fetchInsights, markRead, type TodayInsight } from '@/lib/supabase/insights';
 import { useTheme } from '@/lib/theme';
 
@@ -83,6 +84,8 @@ export default function InsightOpenScreen() {
     setSaving(true);
     try {
       await markRead(id);
+      // Tonight's notification no longer needs to mention an insight she has read.
+      void applyReminders().catch(() => undefined);
       leave();
     } catch (e: unknown) {
       setError(e instanceof Error ? e.message : String(e));

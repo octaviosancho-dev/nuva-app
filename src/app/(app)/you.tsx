@@ -1,5 +1,5 @@
 import { router, useFocusEffect } from 'expo-router';
-import { FileText, Pill, Settings } from 'lucide-react-native';
+import { BellRing, FileText, Pill, Settings } from 'lucide-react-native';
 import { useCallback, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import Animated from 'react-native-reanimated';
@@ -42,14 +42,11 @@ function reportLine(now = new Date()): string {
  * places that are hers to manage. None of the numbers is a streak, and none of
  * them goes down when she misses a day.
  *
- * Two departures from the artboard, both deliberate:
- *
- * - The artboard's name slot reads "[Your name]" and its subline opens with a
- *   stage ("Early perimenopause"). She has no name on file until she signs in
- *   with Apple or Google, and the app does not diagnose a stage, so the header
- *   says "You" and "tracking since" — nothing it would have to make up.
- * - Reminders is a row on the artboard. Its screen waits for notifications
- *   (milestone 12), and a row that leads nowhere is worse than no row.
+ * One deliberate departure from the artboard: its name slot reads "[Your
+ * name]" and its subline opens with a stage ("Early perimenopause"). She has no
+ * name on file until she signs in with Apple or Google, and the app does not
+ * diagnose a stage, so the header says "You" and "tracking since" — nothing it
+ * would have to make up.
  */
 export default function YouScreen() {
   const { c } = useTheme();
@@ -76,7 +73,8 @@ export default function YouScreen() {
   const stats = useEntrance(0, summary !== null);
   const meds = useEntrance(1, summary !== null);
   const report = useEntrance(2, summary !== null);
-  const settings = useEntrance(3, summary !== null);
+  const reminders = useEntrance(3, summary !== null);
+  const settings = useEntrance(4, summary !== null);
 
   const medsLine = !summary
     ? ' '
@@ -129,6 +127,22 @@ export default function YouScreen() {
             title="Health report"
             subtitle={reportLine()}
             onPress={() => router.push('/report')}
+          />
+        </Animated.View>
+
+        <Animated.View style={reminders}>
+          <ListRow
+            icon={BellRing}
+            tint={c.emberSoft}
+            title="Reminders"
+            subtitle={
+              !summary
+                ? ' '
+                : summary.checkInHour === null
+                  ? 'Daily check-in off'
+                  : `Check-in at ${pad(summary.checkInHour)}:00`
+            }
+            onPress={() => router.push('/reminders')}
           />
         </Animated.View>
 

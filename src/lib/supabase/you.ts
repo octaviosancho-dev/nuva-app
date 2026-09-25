@@ -11,6 +11,8 @@ export interface YouSummary {
   activeMedications: number;
   /** The next medication reminder hour from now, wrapping to tomorrow. */
   nextReminderHour: number | null;
+  /** The daily check-in hour, or null when she chose not to be reminded. */
+  checkInHour: number | null;
 }
 
 /**
@@ -29,13 +31,13 @@ export function nextHour(hours: number[], now = new Date()): number | null {
  * goes down because she missed a day.
  */
 export async function fetchYouSummary(): Promise<YouSummary> {
-  await requireUserId();
-
-  const [logs, reads, copies, meds] = await Promise.all([
+  const userId = await requireUserId();
+  const [logs, reads, copies, meds, profile] = await Promise.all([
     supabase.from('symptom_logs').select('logged_on'),
     supabase.from('insight_reads').select('id', { count: 'exact', head: true }),
     supabase.from('words_copies').select('id', { count: 'exact', head: true }),
     supabase.from('medications').select('reminder_hour').eq('active', true),
+    supabase.from('profiles').select('reminder_hour').eq('id', userId).maybeSingle(),
   ]);
 
   if (logs.error) throw new Error(`Could not read your log: ${logs.error.message}`);
@@ -55,6 +57,7 @@ export async function fetchYouSummary(): Promise<YouSummary> {
     wordsCopied: copies.count ?? 0,
     activeMedications: meds.data?.length ?? 0,
     nextReminderHour: nextHour(hours),
+    checkInHour: profile.data?.reminder_hour ?? null,
   };
 }
 

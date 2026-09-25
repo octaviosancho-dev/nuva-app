@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 
 import { TabBar, type TabKey } from '@/components/ui';
 import { startDraft } from '@/lib/log/draft';
+import { applyReminders } from '@/lib/notifications/reminders';
 import { syncOnboarding } from '@/lib/supabase/profile';
 import { useTheme } from '@/lib/theme';
 
@@ -18,10 +19,18 @@ export default function AppLayout() {
 
   useEffect(() => {
     // Her onboarding answers and profile, up to Supabase, every time she
-    // enters. Idempotent, and never allowed to block or break the app shell.
-    void syncOnboarding().catch((e: unknown) => {
-      console.warn('[nuva] onboarding sync failed:', e instanceof Error ? e.message : e);
-    });
+    // enters; then the local reminders, re-planned from the profile it wrote.
+    // The permission prompt appears here, the first time she reaches the app
+    // after choosing a check-in hour in Q6 — the moment she asked for it.
+    // Neither is allowed to block or break the app shell.
+    void syncOnboarding()
+      .catch((e: unknown) => {
+        console.warn('[nuva] onboarding sync failed:', e instanceof Error ? e.message : e);
+      })
+      .then(() => applyReminders({ requestPermission: true }))
+      .catch((e: unknown) => {
+        console.warn('[nuva] reminders failed:', e instanceof Error ? e.message : e);
+      });
   }, []);
 
   const active: TabKey = pathname.includes('/patterns')

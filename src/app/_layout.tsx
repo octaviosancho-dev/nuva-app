@@ -4,13 +4,17 @@ import {
   Fraunces_600SemiBold,
 } from '@expo-google-fonts/fraunces';
 import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
+import * as Notifications from 'expo-notifications';
+import { router, Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
+import { Platform } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
+import { startDraft } from '@/lib/log/draft';
+import type { ReminderUrl } from '@/lib/notifications/reminders';
 import { ensureSession } from '@/lib/supabase/session';
 import { useTheme } from '@/lib/theme';
 
@@ -34,6 +38,43 @@ const FONTS = {
  */
 void SplashScreen.preventAutoHideAsync();
 
+if (Platform.OS !== 'web') {
+  // A reminder that arrives while she is in the app still shows as a banner,
+  // silently — no sound, no badge. The badge would be a count of things she
+  // "owes", and nothing in this app is owed.
+  Notifications.setNotificationHandler({
+    handleNotification: async () => ({
+      shouldShowBanner: true,
+      shouldShowList: true,
+      shouldPlaySound: false,
+      shouldSetBadge: false,
+    }),
+  });
+}
+
+/** Opens the screen a reminder is about. Unknown URLs are ignored, not guessed. */
+function openFromNotification(response: Notifications.NotificationResponse | null): void {
+  const url = response?.notification.request.content.data?.url as ReminderUrl | undefined;
+  switch (url) {
+    case '/log':
+      // The tracker's 60-second clock starts when it opens, however it opens.
+      startDraft();
+      router.push('/log');
+      break;
+    case '/insights':
+      router.push('/insights');
+      break;
+    case '/meds':
+      router.push('/meds');
+      break;
+    case '/report':
+      router.push('/report');
+      break;
+    default:
+      break;
+  }
+}
+
 export default function RootLayout() {
   const [fontsLoaded, fontError] = useFonts(FONTS);
   const { c, isDark } = useTheme();
@@ -55,6 +96,19 @@ export default function RootLayout() {
      */
     void ensureSession();
   }, []);
+
+  useEffect(() => {
+    if (Platform.OS === 'web' || (!fontsLoaded && !fontError)) return;
+    // A tap that launched the app from cold, then every tap after.
+    // Cleared once handled, or every later launch would reopen the same screen.
+    void Notifications.getLastNotificationResponseAsync().then((last) => {
+      if (!last) return;
+      openFromNotification(last);
+      void Notifications.clearLastNotificationResponseAsync();
+    });
+    const sub = Notifications.addNotificationResponseReceivedListener(openFromNotification);
+    return () => sub.remove();
+  }, [fontsLoaded, fontError]);
 
   if (!fontsLoaded && !fontError) {
     return null;

@@ -1,3 +1,4 @@
+import { cancelReminders } from '@/lib/notifications/reminders';
 import { reset as resetOnboarding } from '@/lib/storage/onboarding';
 
 import { supabase } from './client';
@@ -45,4 +46,6 @@ export async function deleteMyAccount(): Promise<void> {
   // The server-side session died with the user, so only the local copy is left.
   await supabase.auth.signOut({ scope: 'local' });
   resetOnboarding();
+  // Nothing scheduled for an account that no longer exists.
+  await cancelReminders();
 }
