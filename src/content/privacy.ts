@@ -35,7 +35,7 @@ export const PRIVACY_SECTIONS: PrivacySection[] = [
     title: 'Where it lives',
     paragraphs: [
       'Your data is kept in a database run by Supabase, our database provider. Every table that holds your data is locked so that only your account can read or change its own rows.',
-      'Some things stay on your phone and are never sent anywhere: a copy of your setup answers, your notification preferences, the reminders your phone schedules, and the Health report PDF, which is built on your phone when you export it and is not uploaded.',
+      'Some things stay on your phone and are never sent anywhere: a copy of your setup answers, your notification preferences, the reminders your phone schedules, and the Health report PDF and CSV export, which are built on your phone when you export them and are not uploaded.',
     ],
   },
   {
@@ -62,7 +62,7 @@ export const PRIVACY_SECTIONS: PrivacySection[] = [
   {
     title: 'Your rights',
     paragraphs: [
-      'You can see everything you have logged in the app, export it as a PDF, and delete it. Depending on where you live, you may have further rights over your data, such as asking what we hold or asking us to correct it.',
+      'You can see everything you have logged in the app, export it as a PDF or a CSV file, and delete it. Depending on where you live, you may have further rights over your data, such as asking what we hold or asking us to correct it.',
     ],
   },
   {

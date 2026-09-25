@@ -1,5 +1,5 @@
 import { router, useFocusEffect } from 'expo-router';
-import { ArrowRight, Eye, FileText, Info, Share } from 'lucide-react-native';
+import { ArrowRight, Eye, FileText, Info, Share, Sheet } from 'lucide-react-native';
 import { useCallback, useState } from 'react';
 import { ActivityIndicator, ScrollView, StyleSheet, Text, View } from 'react-native';
 import Animated from 'react-native-reanimated';
@@ -14,6 +14,7 @@ import {
   useEntrance,
 } from '@/components/ui';
 import { radius, space, type as typeStyles } from '@/constants/tokens';
+import { exportCsv } from '@/lib/report/csv';
 import { exportReport, previewReport } from '@/lib/report/export';
 import {
   currentMonth,
@@ -51,6 +52,7 @@ export default function ReportScreen() {
   const [summary, setSummary] = useState<MonthSummary | null>(null);
   const [past, setPast] = useState<MonthListing[]>([]);
   const [busy, setBusy] = useState<Busy>(null);
+  const [csvBusy, setCsvBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useFocusEffect(
@@ -93,6 +95,20 @@ export default function ReportScreen() {
       if (!/cancel|dismiss/i.test(message)) setError(message);
     } finally {
       setBusy(null);
+    }
+  };
+
+  const runCsv = async () => {
+    if (csvBusy) return;
+    setCsvBusy(true);
+    setError(null);
+    try {
+      await exportCsv();
+    } catch (e: unknown) {
+      const message = e instanceof Error ? e.message : String(e);
+      if (!/cancel|dismiss/i.test(message)) setError(message);
+    } finally {
+      setCsvBusy(false);
     }
   };
 
@@ -209,6 +225,16 @@ export default function ReportScreen() {
                 ))}
               </Animated.View>
             ) : null}
+
+            <Animated.View style={list}>
+              <ListRow
+                icon={Sheet}
+                tint={c.lunaSoft}
+                title="All your data, as CSV"
+                subtitle={csvBusy ? 'Building the file…' : 'Every log, dose and medication, for a spreadsheet'}
+                onPress={() => void runCsv()}
+              />
+            </Animated.View>
 
             <Animated.View style={[styles.note, { backgroundColor: c.surfaceSunken }, note]}>
               <Info size={20} strokeWidth={2} color={c.textSecondary} />

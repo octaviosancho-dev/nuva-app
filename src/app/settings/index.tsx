@@ -101,7 +101,7 @@ export default function SettingsScreen() {
             icon={FileDown}
             tint={c.lunaSoft}
             title="Export everything"
-            subtitle="PDF, on this phone"
+            subtitle="PDF and CSV, on this phone"
             onPress={() => router.push('/report')}
           />
         </Animated.View>
