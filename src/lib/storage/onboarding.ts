@@ -12,8 +12,9 @@ import { openStore, type StorageEngine } from './backend';
  *
  * Which engine backs it is `backend.ts`'s problem — MMKV where its native
  * module exists, a JSON file in Expo Go, both synchronous. This module stays
- * the only one that knows storage exists at all. When the Supabase sync lands
- * it reads `readAll()` and clears with `reset()`.
+ * the only one that knows storage exists at all. `syncOnboarding()` in
+ * `lib/supabase/profile.ts` copies `readAll()` up on every entry to the app;
+ * the local copy stays, because the tracker reads it synchronously.
  */
 const { store, engine } = openStore('nuva.onboarding');
 
@@ -87,7 +88,7 @@ export function readAll(): OnboardingAnswers {
   return answers;
 }
 
-/** Clear the local copy. Called once the answers are safely in Supabase. */
+/** Clear the local copy. Called when she deletes her account. */
 export function reset(): void {
   for (const key of QUESTION_KEYS) {
     store.remove(key);

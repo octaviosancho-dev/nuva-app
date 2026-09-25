@@ -1,7 +1,9 @@
 import { router, Tabs, usePathname } from 'expo-router';
+import { useEffect } from 'react';
 
 import { TabBar, type TabKey } from '@/components/ui';
 import { startDraft } from '@/lib/log/draft';
+import { syncOnboarding } from '@/lib/supabase/profile';
 import { useTheme } from '@/lib/theme';
 
 /**
@@ -13,6 +15,14 @@ import { useTheme } from '@/lib/theme';
 export default function AppLayout() {
   const { c } = useTheme();
   const pathname = usePathname();
+
+  useEffect(() => {
+    // Her onboarding answers and profile, up to Supabase, every time she
+    // enters. Idempotent, and never allowed to block or break the app shell.
+    void syncOnboarding().catch((e: unknown) => {
+      console.warn('[nuva] onboarding sync failed:', e instanceof Error ? e.message : e);
+    });
+  }, []);
 
   const active: TabKey = pathname.includes('/patterns')
     ? 'patterns'

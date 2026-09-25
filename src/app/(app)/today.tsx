@@ -1,5 +1,5 @@
 import { router, useFocusEffect } from 'expo-router';
-import { ArrowRight, Bell } from 'lucide-react-native';
+import { ArrowRight, Bell, MessageSquareQuote } from 'lucide-react-native';
 import { useCallback, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import Animated from 'react-native-reanimated';
@@ -10,6 +10,8 @@ import {
   CrestHeader,
   GrainOverlay,
   InsightCard,
+  ListRow,
+  MedicationCard,
   TextLink,
   useEntrance,
 } from '@/components/ui';
@@ -17,6 +19,7 @@ import { opacity, radius, space, type as typeStyles } from '@/constants/tokens';
 import { startDraft } from '@/lib/log/draft';
 import { fetchInsights, type TodayInsight } from '@/lib/supabase/insights';
 import { fetchLog, fetchTrackedDays, type LoggedSymptom } from '@/lib/supabase/logs';
+import { fetchMedications, setTakenToday, type Medication } from '@/lib/supabase/medications';
 import { useTheme } from '@/lib/theme';
 
 /** "Thursday 18 September", in her own locale. */
@@ -28,14 +31,19 @@ interface TodayState {
   logged: LoggedSymptom[];
   trackedDays: number;
   insight: TodayInsight | null;
+  medications: Medication[];
 }
 
 /**
  * The app's home, from `design/screens/Today.dc.html` and its empty twin.
  *
- * The artboard shows four cards: the log, the daily insight, the medication
- * reminder and Find Your Words. The log and the insight are built; the other
- * two follow.
+ * Four cards, as on the artboard: the log, the daily insight, today's
+ * medication, and Find Your Words. The last two appear only when they have
+ * something to hold — no medication card before she adds one, no words before
+ * she has logged a day for them to be built from.
+ *
+ * The artboard's words line reads "Ready for your appointment on the 29th".
+ * The app does not know her appointments, so it does not claim a date.
  *
  * The log card is `TodayEmpty` until she logs, and the log summary after.
  * The insight card is weighted to her last 7 days, so after a log it can
@@ -57,12 +65,15 @@ export default function TodayScreen() {
         // The insight is a second card, not the page: if it fails, the log
         // card still shows rather than the whole screen erroring.
         fetchInsights().catch(() => null),
+        fetchMedications().catch(() => [] as Medication[]),
       ])
-        .then(([logged, trackedDays, insights]) => {
-          if (!cancelled) setState({ logged, trackedDays, insight: insights?.today ?? null });
+        .then(([logged, trackedDays, insights, medications]) => {
+          if (!cancelled) {
+            setState({ logged, trackedDays, insight: insights?.today ?? null, medications });
+          }
         })
         .catch(() => {
-          if (!cancelled) setState({ logged: [], trackedDays: 0, insight: null });
+          if (!cancelled) setState({ logged: [], trackedDays: 0, insight: null, medications: [] });
         });
       return () => {
         cancelled = true;
@@ -72,6 +83,24 @@ export default function TodayScreen() {
 
   const card = useEntrance(1);
   const insightCard = useEntrance(2, state?.insight != null);
+  const medsCard = useEntrance(3, (state?.medications.length ?? 0) > 0);
+  const wordsCard = useEntrance(4, (state?.trackedDays ?? 0) > 0);
+
+  const onToggleTaken = async (med: Medication, taken: boolean) => {
+    // Optimistic, as on the medication screen: the tap is the whole interaction.
+    const flip = (value: boolean) =>
+      setState((s) =>
+        s
+          ? { ...s, medications: s.medications.map((m) => (m.id === med.id ? { ...m, takenToday: value } : m)) }
+          : s,
+      );
+    flip(taken);
+    try {
+      await setTakenToday(med.id, taken);
+    } catch {
+      flip(!taken);
+    }
+  };
   const loggedToday = (state?.logged.length ?? 0) > 0;
   // Before her first log, today is day one rather than day zero — which is what
   // the empty copy says out loud.
@@ -173,6 +202,30 @@ export default function TodayScreen() {
             />
           </Animated.View>
         ) : null}
+
+        {state && state.medications.length > 0 ? (
+          <Animated.View style={[styles.stack, medsCard]}>
+            {state.medications.map((med) => (
+              <MedicationCard
+                key={med.id}
+                medication={med}
+                onToggleTaken={(taken) => void onToggleTaken(med, taken)}
+              />
+            ))}
+          </Animated.View>
+        ) : null}
+
+        {state && state.trackedDays > 0 ? (
+          <Animated.View style={wordsCard}>
+            <ListRow
+              icon={MessageSquareQuote}
+              tint={c.emberSoft}
+              title="Find your words"
+              subtitle="What to say at your next appointment, from your own log"
+              onPress={() => router.navigate('/(app)/words')}
+            />
+          </Animated.View>
+        ) : null}
       </ScrollView>
 
       <GrainOverlay />
@@ -226,6 +279,9 @@ const styles = StyleSheet.create({
     marginTop: space.space2,
   },
   insight: {
+    gap: space.space3,
+  },
+  stack: {
     gap: space.space3,
   },
   allLink: {
