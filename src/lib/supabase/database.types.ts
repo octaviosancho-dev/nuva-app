@@ -361,6 +361,24 @@ export type Database = {
         }
         Relationships: []
       }
+      words_copies: {
+        Row: {
+          copied_at: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          copied_at?: string
+          id?: string
+          user_id?: string
+        }
+        Update: {
+          copied_at?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

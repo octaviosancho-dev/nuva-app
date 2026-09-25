@@ -9,6 +9,7 @@ import Animated from 'react-native-reanimated';
 import { CrestHeader, GrainOverlay, WordsCard, useEntrance } from '@/components/ui';
 import { radius, space, type as typeStyles } from '@/constants/tokens';
 import { generateWords, type Words } from '@/lib/supabase/words';
+import { recordWordsCopied } from '@/lib/supabase/you';
 import { useTheme } from '@/lib/theme';
 
 /**
@@ -54,6 +55,9 @@ export default function WordsScreen() {
   const onCopy = () => {
     if (!words) return;
     void Clipboard.setStringAsync(words.sentences.join(' '));
+    // Counted for the You screen. A failed count must not look like a failed
+    // copy, so it is fire-and-forget.
+    void recordWordsCopied().catch(() => undefined);
     // One of the three events allowed to vibrate — see design/motion.md.
     if (Platform.OS !== 'web') {
       void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
