@@ -7,7 +7,7 @@
  * sign-in — this changes in the same pull request, before it ships.
  *
  * App Store Connect also needs this at a public URL. The same sections are
- * published to GitHub Pages by `scripts/build-privacy-page.mjs` and
+ * published to GitHub Pages by `scripts/build-site.mjs` and
  * `.github/workflows/pages.yml`:
  * https://octaviosancho-dev.github.io/nuva-app/privacy/
  */

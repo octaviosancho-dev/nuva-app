@@ -1,18 +1,20 @@
-# Publishes the privacy policy to GitHub Pages:
-#   https://octaviosancho-dev.github.io/nuva-app/privacy/
+# Publishes the public site to GitHub Pages (custom domain nuvacare.app once
+# its DNS points at GitHub):
+#   /privacy/             the privacy policy, from src/content/privacy.ts
+#   /email/unsubscribed/  and /email/link-invalid/, for email-unsubscribe
 #
-# The page is built from src/content/privacy.ts — the same text the app shows —
-# by scripts/build-privacy-page.mjs, so the two can never drift apart.
+# Built by scripts/build-site.mjs, so the web policy and the in-app policy can
+# never drift apart.
 #
 # One-time setup (repo Settings → Pages): Source = "GitHub Actions".
-name: Privacy policy page
+name: Public site
 
 on:
   push:
     branches: [main]
     paths:
       - src/content/privacy.ts
-      - scripts/build-privacy-page.mjs
+      - scripts/build-site.mjs
       - design/tokens.json
       - .github/workflows/pages.yml
   workflow_dispatch:
@@ -38,7 +40,7 @@ jobs:
         with:
           node-version: 24
       # No npm install: the script uses only Node built-ins.
-      - run: node scripts/build-privacy-page.mjs
+      - run: node scripts/build-site.mjs
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
