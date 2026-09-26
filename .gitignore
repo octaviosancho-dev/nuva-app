@@ -47,3 +47,6 @@ example
 # the fetched content does not, the same way package-lock.json is versioned
 # and node_modules is not.
 .agents/
+
+# Built by scripts/build-privacy-page.mjs and deployed by .github/workflows/pages.yml
+site/

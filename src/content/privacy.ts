@@ -6,8 +6,10 @@
  * a new service is wired in — RevenueCat, PostHog, Resend, Apple or Google
  * sign-in — this changes in the same pull request, before it ships.
  *
- * App Store Connect also needs this at a public URL. The same sections render
- * there; hosting is the one step that needs a domain.
+ * App Store Connect also needs this at a public URL. The same sections are
+ * published to GitHub Pages by `scripts/build-privacy-page.mjs` and
+ * `.github/workflows/pages.yml`:
+ * https://octaviosancho-dev.github.io/nuva-app/privacy/
  */
 
 export const PRIVACY_UPDATED = '25 September 2026';
