@@ -15,7 +15,8 @@ import {
   TextLink,
   useEntrance,
 } from '@/components/ui';
-import { opacity, radius, space, type as typeStyles } from '@/constants/tokens';
+import { alpha } from '@/constants/nuva';
+import { color, opacity, radius, space, type as typeStyles } from '@/constants/tokens';
 import { startDraft } from '@/lib/log/draft';
 import { fetchInsights, type TodayInsight } from '@/lib/supabase/insights';
 import { fetchLog, fetchTrackedDays, type LoggedSymptom } from '@/lib/supabase/logs';
@@ -259,7 +260,7 @@ const styles = StyleSheet.create({
     borderRadius: radius.pill,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'rgba(253,248,241,0.16)',
+    backgroundColor: alpha(color.light.textOnNight, 0.16),
   },
   body: {
     paddingTop: space.space5,

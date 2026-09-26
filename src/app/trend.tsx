@@ -13,8 +13,8 @@ import {
 import Animated from 'react-native-reanimated';
 
 import { CrestHeader, GrainOverlay, TrendChart, useEntrance } from '@/components/ui';
-import { category } from '@/constants/nuva';
-import { opacity, radius, space, type as typeStyles, type ColorToken } from '@/constants/tokens';
+import { alpha, category } from '@/constants/nuva';
+import { color, opacity, radius, space, type as typeStyles, type ColorToken } from '@/constants/tokens';
 import {
   fetchLoggedSymptoms,
   fetchTrend,
@@ -137,8 +137,8 @@ export default function TrendScreen() {
                           borderColor: 'transparent',
                         }
                       : {
-                          backgroundColor: 'rgba(253,248,241,0.1)',
-                          borderColor: 'rgba(253,248,241,0.2)',
+                          backgroundColor: alpha(color.light.textOnNight, 0.1),
+                          borderColor: color.light.lineOnNight,
                         },
                   ]}
                 >
@@ -231,7 +231,7 @@ const styles = StyleSheet.create({
     borderRadius: radius.pill,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'rgba(253,248,241,0.16)',
+    backgroundColor: alpha(color.light.textOnNight, 0.16),
   },
   title: {
     flex: 1,

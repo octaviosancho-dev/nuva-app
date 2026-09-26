@@ -5,7 +5,8 @@ import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from
 import Animated from 'react-native-reanimated';
 
 import { CalendarHeat, CrestHeader, GrainOverlay, useEntrance } from '@/components/ui';
-import { opacity, radius, space, type as typeStyles } from '@/constants/tokens';
+import { alpha } from '@/constants/nuva';
+import { color, opacity, radius, space, type as typeStyles } from '@/constants/tokens';
 import { track } from '@/lib/analytics';
 import { today } from '@/lib/supabase/logs';
 import {
@@ -110,7 +111,7 @@ export default function PatternsScreen() {
               hitSlop={8}
               style={({ pressed }) => [
                 styles.navButton,
-                { backgroundColor: 'rgba(253,248,241,0.16)' },
+                { backgroundColor: alpha(color.light.textOnNight, 0.16) },
                 pressed ? { opacity: opacity.pressed } : null,
               ]}
             >
@@ -132,8 +133,8 @@ export default function PatternsScreen() {
                 styles.navButton,
                 {
                   backgroundColor: atCurrentMonth
-                    ? 'rgba(253,248,241,0.08)'
-                    : 'rgba(253,248,241,0.16)',
+                    ? alpha(color.light.textOnNight, 0.08)
+                    : alpha(color.light.textOnNight, 0.16),
                 },
                 atCurrentMonth ? { opacity: opacity.disabled } : null,
                 pressed && !atCurrentMonth ? { opacity: opacity.pressed } : null,
@@ -210,7 +211,7 @@ const styles = StyleSheet.create({
     borderRadius: radius.pill,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'rgba(253,248,241,0.16)',
+    backgroundColor: alpha(color.light.textOnNight, 0.16),
   },
   monthNav: {
     flexDirection: 'row',

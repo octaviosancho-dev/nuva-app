@@ -11,8 +11,8 @@ import {
   SymptomChip,
   useEntrance,
 } from '@/components/ui';
-import { CATEGORIES, type CategorySlug } from '@/constants/nuva';
-import { opacity, radius, space, type as typeStyles } from '@/constants/tokens';
+import { alpha, CATEGORIES, type CategorySlug } from '@/constants/nuva';
+import { color, opacity, radius, space, type as typeStyles } from '@/constants/tokens';
 import { startDraft, toggleSymptom, useDraft } from '@/lib/log/draft';
 import { fetchSymptoms, type CatalogueSymptom } from '@/lib/supabase/symptoms';
 import { useTheme } from '@/lib/theme';
@@ -230,7 +230,7 @@ const styles = StyleSheet.create({
     borderRadius: radius.pill,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'rgba(253,248,241,0.16)',
+    backgroundColor: alpha(color.light.textOnNight, 0.16),
   },
   body: {
     flex: 1,

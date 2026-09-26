@@ -12,6 +12,7 @@ import {
   ProgressTrail,
   useEntrance,
 } from '@/components/ui';
+import { alpha } from '@/constants/nuva';
 import { color, space, type as typeStyles, type ColorToken } from '@/constants/tokens';
 import { track } from '@/lib/analytics';
 import { QUESTION_KEYS, readAnswer } from '@/lib/storage/onboarding';
@@ -84,7 +85,7 @@ export function QuestionScreen({
    */
   const ink = onDark
     ? { text: c.textOnNight, muted: c.textOnNightMuted }
-    : { text: color.light.onLuna, muted: 'rgba(31,27,46,0.7)' };
+    : { text: color.light.onLuna, muted: alpha(color.light.onLuna, 0.7) };
 
   const eyebrow = useEntrance(0);
   const headline = useEntrance(2);

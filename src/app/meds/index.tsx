@@ -11,7 +11,8 @@ import {
   MedicationCard,
   useEntrance,
 } from '@/components/ui';
-import { opacity, radius, space, type as typeStyles } from '@/constants/tokens';
+import { alpha } from '@/constants/nuva';
+import { color, opacity, radius, space, type as typeStyles } from '@/constants/tokens';
 import {
   fetchMedicationStats,
   fetchMedications,
@@ -178,7 +179,7 @@ const styles = StyleSheet.create({
     borderRadius: radius.pill,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'rgba(253,248,241,0.16)',
+    backgroundColor: alpha(color.light.textOnNight, 0.16),
   },
   title: {
     flex: 1,

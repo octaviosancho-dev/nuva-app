@@ -12,8 +12,8 @@ import {
   icon as resolveIcon,
   useEntrance,
 } from '@/components/ui';
-import { category } from '@/constants/nuva';
-import { opacity, radius, space, type as typeStyles, type ColorToken } from '@/constants/tokens';
+import { alpha, category } from '@/constants/nuva';
+import { color, opacity, radius, space, type as typeStyles, type ColorToken } from '@/constants/tokens';
 import { clearDraft, setSeverity, useDraft } from '@/lib/log/draft';
 import { saveLog } from '@/lib/supabase/logs';
 import { useTheme } from '@/lib/theme';
@@ -109,7 +109,7 @@ export default function LogSeverityScreen() {
                     styles.segment,
                     {
                       backgroundColor:
-                        i <= index ? c.textOnNight : 'rgba(253,248,241,0.24)',
+                        i <= index ? c.textOnNight : alpha(color.light.textOnNight, 0.24),
                     },
                   ]}
                 />
@@ -208,7 +208,7 @@ const styles = StyleSheet.create({
     borderRadius: radius.pill,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'rgba(253,248,241,0.16)',
+    backgroundColor: alpha(color.light.textOnNight, 0.16),
   },
   segments: {
     flex: 1,

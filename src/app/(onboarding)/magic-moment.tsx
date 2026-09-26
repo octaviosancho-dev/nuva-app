@@ -176,6 +176,9 @@ export default function MagicMomentScreen() {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
+    // The glow is 380 wide on a 393 artboard; at 375 it overhangs by 2px a
+    // side. Clip it rather than shrink it — it is light, not a shape.
+    overflow: 'hidden',
   },
   glow: {
     position: 'absolute',

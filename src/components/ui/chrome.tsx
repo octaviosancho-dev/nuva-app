@@ -9,6 +9,7 @@ import {
   type ViewStyle,
 } from 'react-native';
 
+import { alpha } from '@/constants/nuva';
 import { color, opacity, radius, space, type as typeStyles } from '@/constants/tokens';
 import { useTheme } from '@/lib/theme';
 import { ArrowLeft } from 'lucide-react-native';
@@ -52,7 +53,7 @@ export function EyebrowPill({ label, variant = 'onNight', style }: EyebrowPillPr
   const { c } = useTheme();
 
   const skin: Record<EyebrowVariant, { background: string; foreground: string }> = {
-    onNight: { background: 'rgba(253,248,241,0.14)', foreground: c.textOnNight },
+    onNight: { background: alpha(color.light.textOnNight, 0.14), foreground: c.textOnNight },
     onLight: { background: c.surfaceSunken, foreground: c.textSecondary },
     // Q5 and Q6 move the header to `luna`. A sunken surface would read as a
     // hole punched in the fill, so the pill becomes a wash of ink instead.
@@ -60,7 +61,7 @@ export function EyebrowPill({ label, variant = 'onNight', style }: EyebrowPillPr
     // Both values are fixed, not theme-resolved: `luna` holds the same green in
     // light and dark, so text on it must hold the same ink. Using the theme's
     // `textPrimary` here puts near-white on green in dark mode.
-    onLightFill: { background: 'rgba(31,27,46,0.1)', foreground: color.light.onLuna },
+    onLightFill: { background: alpha(color.light.onLuna, 0.1), foreground: color.light.onLuna },
     ember: { background: c.ember, foreground: c.onEmber },
   };
 
@@ -154,7 +155,7 @@ export function BackButton({ onPress, onDark = true, hidden = false }: BackButto
       style={({ pressed }) => [
         styles.back,
         styles.backControl,
-        { borderColor: onDark ? 'rgba(253,248,241,0.2)' : c.line },
+        { borderColor: onDark ? color.light.lineOnNight : c.line },
         pressed ? { opacity: opacity.pressed } : null,
       ]}
     >

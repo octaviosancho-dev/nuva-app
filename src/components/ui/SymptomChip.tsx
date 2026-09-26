@@ -7,8 +7,8 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 
-import { MOTION, SYMPTOM_ICONS, category, type CategorySlug } from '@/constants/nuva';
-import { radius, space, type as typeStyles, type ColorToken } from '@/constants/tokens';
+import { alpha, MOTION, SYMPTOM_ICONS, category, type CategorySlug } from '@/constants/nuva';
+import { color, radius, space, type as typeStyles, type ColorToken } from '@/constants/tokens';
 import { useTheme } from '@/lib/theme';
 import { icon } from './icons';
 import { usePressScale } from './motion';
@@ -31,8 +31,8 @@ export interface SymptomChipProps {
  * against both dark category fills and the two light ones, so it is a wash of
  * the label's own colour rather than a fixed tint.
  */
-const SCRIM_ON_DARK = 'rgba(253,248,241,0.22)';
-const SCRIM_ON_LIGHT = 'rgba(31,27,46,0.13)';
+const SCRIM_ON_DARK = alpha(color.light.textOnNight, 0.22);
+const SCRIM_ON_LIGHT = alpha(color.light.onLuna, 0.13);
 
 /** The two category fills that take dark text — see `on-blush` and `on-luna`. */
 const LIGHT_FILLS: ReadonlySet<CategorySlug> = new Set<CategorySlug>(['mood', 'physical']);

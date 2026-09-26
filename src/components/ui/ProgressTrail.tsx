@@ -9,8 +9,8 @@ import Animated, {
 } from 'react-native-reanimated';
 import Svg, { Circle, Path } from 'react-native-svg';
 
-import { MOTION } from '@/constants/nuva';
-import { radius, space, type as typeStyles } from '@/constants/tokens';
+import { alpha, MOTION } from '@/constants/nuva';
+import { color, radius, space, type as typeStyles } from '@/constants/tokens';
 import { useTheme } from '@/lib/theme';
 import {
   MARK_ANTENNA_LEFT,
@@ -29,8 +29,8 @@ const MOTH_SIZE = 16;
 /** The artboards place the moth at `top: -11px` against the segment row. */
 const MOTH_LIFT = 11;
 
-const TRACK_ON_DARK = 'rgba(253,248,241,0.24)';
-const TRACK_ON_LIGHT = 'rgba(31,27,46,0.22)';
+const TRACK_ON_DARK = alpha(color.light.textOnNight, 0.24);
+const TRACK_ON_LIGHT = alpha(color.light.onLuna, 0.22);
 
 export interface ProgressTrailProps {
   /** 6 in onboarding. */

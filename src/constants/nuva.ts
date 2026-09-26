@@ -39,6 +39,19 @@ export type CategorySlug = (typeof CATEGORIES)[number]['slug'];
 
 export const category = (slug: string) => CATEGORIES.find((c) => c.slug === slug) ?? null;
 
+/**
+ * A token colour at a given opacity: `alpha(color.light.textOnNight, 0.16)`.
+ *
+ * The artboards draw washes on night grounds (the 36px icon buttons, the
+ * selected-day fill, chip scrims) as a token at an opacity. This keeps the
+ * colour coming from the token and only the opacity from the artboard, so no
+ * component carries a literal colour. Accepts `#rrggbb`.
+ */
+export function alpha(hex: string, opacity: number): string {
+  const n = parseInt(hex.replace('#', ''), 16);
+  return `rgba(${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255}, ${opacity})`;
+}
+
 /* ----------------------------------------------------------------- severity
  * Four levels. The label is not decoration: colour alone must never carry
  * severity, so every severity control renders the word and the filled dots.
