@@ -17,8 +17,8 @@ import { verify } from './sign.ts';
 
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL') ?? '';
 const SERVICE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '';
-/** Where the static pages live. GitHub forwards this to nuvacare.app once the domain is set. */
-const SITE_URL = (Deno.env.get('SITE_URL') ?? 'https://octaviosancho-dev.github.io/nuva-app').replace(/\/$/, '');
+/** The public site, on GitHub Pages under the nuvacare.app domain. */
+const SITE_URL = (Deno.env.get('SITE_URL') ?? 'https://nuvacare.app').replace(/\/$/, '');
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 

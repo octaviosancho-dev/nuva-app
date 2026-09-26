@@ -9,7 +9,7 @@
  * App Store Connect also needs this at a public URL. The same sections are
  * published to GitHub Pages by `scripts/build-site.mjs` and
  * `.github/workflows/pages.yml`:
- * https://octaviosancho-dev.github.io/nuva-app/privacy/
+ * https://nuvacare.app/privacy/ (the address to give App Store Connect)
  */
 
 export const PRIVACY_UPDATED = '26 September 2026';

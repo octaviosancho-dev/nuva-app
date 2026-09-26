@@ -1,5 +1,4 @@
-# Publishes the public site to GitHub Pages (custom domain nuvacare.app once
-# its DNS points at GitHub):
+# Publishes the public site to GitHub Pages, served at https://nuvacare.app:
 #   /privacy/             the privacy policy, from src/content/privacy.ts
 #   /email/unsubscribed/  and /email/link-invalid/, for email-unsubscribe
 #
