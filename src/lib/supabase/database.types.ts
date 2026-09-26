@@ -313,15 +313,27 @@ export type Database = {
       }
       validation_stats: {
         Row: {
-          stat_copy: string
+          lede: string
+          mechanism: string | null
+          percent: number
+          source: string
+          source_url: string | null
           symptom_id: string
         }
         Insert: {
-          stat_copy: string
+          lede: string
+          mechanism?: string | null
+          percent: number
+          source: string
+          source_url?: string | null
           symptom_id: string
         }
         Update: {
-          stat_copy?: string
+          lede?: string
+          mechanism?: string | null
+          percent?: number
+          source?: string
+          source_url?: string | null
           symptom_id?: string
         }
         Relationships: [

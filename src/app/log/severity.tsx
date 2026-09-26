@@ -14,8 +14,9 @@ import {
 } from '@/components/ui';
 import { alpha, category } from '@/constants/nuva';
 import { color, opacity, radius, space, type as typeStyles, type ColorToken } from '@/constants/tokens';
-import { clearDraft, setSeverity, useDraft } from '@/lib/log/draft';
+import { clearDraft, finishDraft, setSeverity, useDraft } from '@/lib/log/draft';
 import { saveLog } from '@/lib/supabase/logs';
+import { fetchValidations } from '@/lib/supabase/validation';
 import { useTheme } from '@/lib/theme';
 
 /**
@@ -73,8 +74,14 @@ export default function LogSeverityScreen() {
     setError(null);
     try {
       await saveLog(draft.map((e) => ({ symptomId: e.symptom.id, severity: e.severity })));
+      // The clock stops at the save, not at whichever screen comes after it.
+      finishDraft();
+      const ids = draft.map((e) => e.symptom.id);
       clearDraft();
-      router.replace('/log/saved');
+      // The validation screen only when at least one symptom has a sourced
+      // figure; otherwise straight to the confirmation, as before.
+      const validations = await fetchValidations(ids).catch(() => []);
+      router.replace(validations.length > 0 ? '/log/validation' : '/log/saved');
     } catch (e: unknown) {
       // Her taps are not lost — the draft survives and she can retry.
       setError(e instanceof Error ? e.message : String(e));

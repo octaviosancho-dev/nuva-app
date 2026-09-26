@@ -32,6 +32,8 @@ const listeners = new Set<() => void>();
  * it is the only way that sentence means anything.
  */
 let startedAt: number | null = null;
+/** Frozen at save, so screens shown after the save do not add to it. */
+let finishedMs: number | null = null;
 
 function emit() {
   for (const l of listeners) l();
@@ -51,10 +53,17 @@ export function getDraft(): readonly DraftEntry[] {
 /** Starts the clock. Called when the tracker opens, not on the first tap. */
 export function startDraft(): void {
   startedAt = Date.now();
+  finishedMs = null;
+}
+
+/** Stops the clock at the moment the log is saved. */
+export function finishDraft(): void {
+  finishedMs = startedAt === null ? null : Date.now() - startedAt;
 }
 
 /** How long this log took, or null if the clock never started. */
 export function elapsedMs(): number | null {
+  if (finishedMs !== null) return finishedMs;
   return startedAt === null ? null : Date.now() - startedAt;
 }
 
@@ -71,6 +80,17 @@ export function toggleSymptom(symptom: CatalogueSymptom): void {
 
 export function setSeverity(symptomId: string, severity: number): void {
   entries = entries.map((e) => (e.symptom.id === symptomId ? { ...e, severity } : e));
+  emit();
+}
+
+/**
+ * Replaces the draft with what she already logged today, so "Edit today"
+ * opens on her log rather than on an empty grid. Only called while the draft
+ * is empty, so it never overwrites taps she has already made.
+ */
+export function loadDraft(next: readonly DraftEntry[]): void {
+  if (entries.length > 0) return;
+  entries = next;
   emit();
 }
 

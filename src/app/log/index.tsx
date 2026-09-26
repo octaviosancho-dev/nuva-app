@@ -13,7 +13,8 @@ import {
 } from '@/components/ui';
 import { alpha, CATEGORIES, type CategorySlug } from '@/constants/nuva';
 import { color, opacity, radius, space, type as typeStyles } from '@/constants/tokens';
-import { startDraft, toggleSymptom, useDraft } from '@/lib/log/draft';
+import { getDraft, loadDraft, startDraft, toggleSymptom, useDraft } from '@/lib/log/draft';
+import { fetchLog } from '@/lib/supabase/logs';
 import { fetchSymptoms, type CatalogueSymptom } from '@/lib/supabase/symptoms';
 import { useTheme } from '@/lib/theme';
 
@@ -55,8 +56,20 @@ export default function LogSelectScreen() {
 
   useEffect(() => {
     let cancelled = false;
-    fetchSymptoms()
-      .then((rows) => !cancelled && setSymptoms(rows))
+    // With today already logged, "Edit today" opens on her log: the same
+    // symptoms selected, at the severities she gave them.
+    Promise.all([fetchSymptoms(), getDraft().length === 0 ? fetchLog().catch(() => []) : []])
+      .then(([rows, logged]) => {
+        if (cancelled) return;
+        setSymptoms(rows);
+        const byId = new Map(rows.map((r) => [r.id, r]));
+        loadDraft(
+          logged.flatMap((l) => {
+            const symptom = byId.get(l.symptomId);
+            return symptom ? [{ symptom, severity: l.severity }] : [];
+          }),
+        );
+      })
       .catch((e: unknown) => !cancelled && setError(e instanceof Error ? e.message : String(e)));
     return () => {
       cancelled = true;

@@ -27,6 +27,10 @@ export function today(date = new Date()): string {
  * in a day is a correction, not a second event. Re-opening the tracker and
  * changing a severity overwrites rather than accumulating.
  *
+ * The save *is* the day: a symptom she logged earlier today and has now
+ * deselected is removed, so editing today can take something away as well as
+ * add it. Other days are never touched.
+ *
  * `user_id` is taken from the session rather than passed in — RLS would refuse
  * any other value anyway, and threading it through the UI would invite someone
  * to think it was theirs to choose.
@@ -48,6 +52,17 @@ export async function saveLog(entries: readonly LogEntry[], loggedOn = today()):
 
   if (error) {
     throw new Error(`Could not save the log: ${error.message}`);
+  }
+
+  const kept = entries.map((e) => e.symptomId);
+  const { error: pruneError } = await supabase
+    .from('symptom_logs')
+    .delete()
+    .eq('logged_on', loggedOn)
+    .not('symptom_id', 'in', `(${kept.join(',')})`);
+
+  if (pruneError) {
+    throw new Error(`Could not update the log: ${pruneError.message}`);
   }
 }
 
