@@ -12,7 +12,7 @@
  * https://octaviosancho-dev.github.io/nuva-app/privacy/
  */
 
-export const PRIVACY_UPDATED = '25 September 2026';
+export const PRIVACY_UPDATED = '26 September 2026';
 
 export interface PrivacySection {
   title: string;
@@ -23,7 +23,7 @@ export const PRIVACY_SECTIONS: PrivacySection[] = [
   {
     title: 'The short version',
     paragraphs: [
-      'Nuva stores what you log so it can show it back to you. Nobody else can read it, we do not sell it, we do not share it with advertisers, and we do not use it to train AI models. You can delete all of it from Settings, at any time, in one step.',
+      'Nuva stores what you log so it can show it back to you. Your log can only be read by your account. We do not sell your data, we do not share it with advertisers, and we do not use it to train AI models. You can delete all of it from Settings, at any time, in one step.',
     ],
   },
   {
@@ -48,10 +48,17 @@ export const PRIVACY_SECTIONS: PrivacySection[] = [
     ],
   },
   {
+    title: 'Product analytics',
+    paragraphs: [
+      'We use PostHog, a product analytics service based in the United States, to understand how the app is used and make it better — for example, how long a log takes, and which screens are opened. It receives a short record each time certain things happen, tied to your anonymous account identifier, never your name or email address.',
+      'Some of these records include health-related information: your answers to the six setup questions, the name of a symptom when its statistic is shown to you, which insight you open, and how many symptoms you logged in a day. PostHog does not receive your full log, your severities, your medications or anything you type. Your IP address is not used to work out where you are.',
+    ],
+  },
+  {
     title: 'Who else sees it',
     paragraphs: [
       'No one, unless you choose to share it. When you export your Health report or copy your sentences, you decide where they go.',
-      'Supabase stores the data on our behalf and does not use it for anything else. Before we add any other service — for payments, product analytics or email — this policy will say which one, what it receives and why, before it is switched on.',
+      'Supabase stores your data on our behalf, and PostHog receives the usage records described above. Neither uses them for anything else. Before we add any other service — for payments or email — this policy will say which one, what it receives and why, before it is switched on.',
     ],
   },
   {

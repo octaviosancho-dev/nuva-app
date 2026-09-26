@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase/client';
+import { ensureSession } from '@/lib/supabase/session';
 
 /**
  * The events from PRODUCT_BRIEF.md section 8 — the whole list, typed, so a
@@ -36,17 +36,27 @@ export type AnalyticsEvent = keyof AnalyticsEvents;
  * new dependency. Both values are public by design (the key is a project
  * ingest key, like the Supabase publishable key), so they live in `.env`.
  *
- * Until the key exists, nothing leaves the phone: events print in development
- * and are dropped in production. When it is added, the privacy policy in
- * `src/content/privacy.ts` must say so in the same change — several of these
- * events carry what she logged.
+ * Without a key nothing leaves the phone. The privacy policy in
+ * `src/content/privacy.ts` names PostHog and what it receives; if an event
+ * gains a property, the policy changes in the same pull request.
+ *
+ * Two things are stripped or tagged on every event:
+ * - `$geoip_disable`: PostHog does not turn her IP into a location.
+ * - `environment`: development events are tagged so they can be filtered
+ *   out of the real funnels.
  */
 const KEY = process.env.EXPO_PUBLIC_POSTHOG_KEY;
-const HOST = process.env.EXPO_PUBLIC_POSTHOG_HOST ?? 'https://eu.i.posthog.com';
+const HOST = process.env.EXPO_PUBLIC_POSTHOG_HOST ?? 'https://us.i.posthog.com';
 
+/**
+ * Her anonymous account id. Waits for the session rather than reading whatever
+ * is there: on a fresh install the first events (onboarding_started, the first
+ * answers) fire before the session exists, and reading it directly would drop
+ * exactly the top of the funnel.
+ */
 async function distinctId(): Promise<string | null> {
-  const { data } = await supabase.auth.getSession();
-  return data.session?.user.id ?? null;
+  const session = await ensureSession();
+  return session?.user.id ?? null;
 }
 
 /**
@@ -75,7 +85,12 @@ export function track<E extends AnalyticsEvent>(
           api_key: KEY,
           event,
           distinct_id: id,
-          properties: { ...props, $lib: 'nuva-http' },
+          properties: {
+            ...props,
+            $lib: 'nuva-http',
+            $geoip_disable: true,
+            environment: __DEV__ ? 'development' : 'production',
+          },
           timestamp: new Date().toISOString(),
         }),
       });
